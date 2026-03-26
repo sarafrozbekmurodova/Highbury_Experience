@@ -2,6 +2,9 @@ import tkinter as tk
 from view.main_window import MainWindow
 from controller.main_controller import MainController
 from view.pages.starters_page import StartersPage
+from view.pages.main_page import MainPage
+from view.pages.desserts_page import DessertsPage
+from view.pages.drinks_page import DrinksPage
 
 
 class App:
@@ -25,8 +28,20 @@ class App:
         self.controller.show_page("starters")
 
     def _create_pages(self):
+        # Starters
         starters_page = StartersPage(self.main_window.page_container, self.controller)
         self.controller.register_page("starters", starters_page)
+
+        # Main Course
+        main_page = MainPage(self.main_window.page_container, self.controller)
+        self.controller.register_page("main", main_page)
+        # Desserts
+        desserts_page = DessertsPage(self.main_window.page_container, self.controller)
+        self.controller.register_page("desserts", desserts_page)
+
+        # Drinks
+        drinks_page = DrinksPage(self.main_window.page_container, self.controller)
+        self.controller.register_page("drinks", drinks_page)
 
 
     def run(self):

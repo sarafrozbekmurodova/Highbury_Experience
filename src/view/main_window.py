@@ -27,7 +27,7 @@ class MainWindow:
         self.confirmation_page = None
 
     def build_left(self):
-        tk.Label(self.left_frame, text="Categories", fg="white", bg="#1a1a1a").pack(pady=10)
+        tk.Label(self.left_frame, text="Categories", fg="white", bg="#1a1a1a",font=("Arial", 12, "bold")).pack(pady=15)
 
         categories = ["Starters", "Main", "Desserts", "Drinks"]
 
