@@ -1,0 +1,73 @@
+# src/controller/main_controller.py
+
+class MainController:
+    def __init__(self, root):
+        self.root = root
+        self.main_window = None
+        self.pages = {}
+        self.order = []   # List of dicts: {'name': str, 'price': int, 'quantity': int}
+
+    def set_main_window(self, main_window):
+        self.main_window = main_window
+
+    def register_page(self, name: str, page_frame):
+        self.pages[name] = page_frame
+        page_frame.grid(row=0, column=0, sticky="nsew")
+
+    def show_page(self, name: str):
+        if name in self.pages:
+            self.main_window.show_page(self.pages[name])
+        else:
+            print(f"Page '{name}' is not implemented yet.")
+
+    def add_to_order(self, item_name: str, price_str: str):
+        try:
+            price = int(price_str.split()[0])
+
+            # Increase quantity if item already exists
+            for item in self.order:
+                if item['name'] == item_name:
+                    item['quantity'] += 1
+                    self.refresh_order_panel()
+                    return
+
+            self.order.append({'name': item_name, 'price': price, 'quantity': 1})
+            self.refresh_order_panel()
+        except Exception as e:
+            print(f"Error adding item: {e}")
+
+    def change_quantity(self, index: int, delta: int):
+        if 0 <= index < len(self.order):
+            self.order[index]['quantity'] += delta
+            if self.order[index]['quantity'] <= 0:
+                del self.order[index]
+            self.refresh_order_panel()
+
+    def remove_from_order(self, index: int):
+        if 0 <= index < len(self.order):
+            del self.order[index]
+            self.refresh_order_panel()
+
+    def get_total(self):
+        return sum(item['price'] * item['quantity'] for item in self.order)
+
+    def place_order(self):
+        """Called when user clicks 'Place Order'"""
+        if not self.order:
+            print("Order is empty!")
+            return
+
+        total = self.get_total()
+        print(f"Order placed! Total: {total} kr")
+        print("Items:", self.order)
+
+        # Show confirmation page
+        self.main_window.show_confirmation_page(self.order, total)
+
+        # Clear the order after placing
+        self.order.clear()
+        self.refresh_order_panel()
+
+    def refresh_order_panel(self):
+        if self.main_window:
+            self.main_window.update_order_list(self.order, self.get_total())
