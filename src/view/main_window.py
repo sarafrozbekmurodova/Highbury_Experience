@@ -378,7 +378,7 @@ class MainWindow:
             pady=10,
             font=("Arial", 10, "bold"),
             cursor="hand2",
-            command=lambda: self.controller.add_to_order("Sunday Roast Beef", "16 kr")
+            command=lambda: self.controller.add_to_order("Sunday Roast Beef", 16)
         ).pack()
 
     # =========================================================
@@ -466,7 +466,7 @@ class MainWindow:
             pady=10,
             font=("Arial", 11, "bold"),
             cursor="hand2",
-            command=lambda: self.controller.add_to_order("Sunday Roast Beef", "16 kr")
+            command=lambda: self.controller.add_to_order("Sunday Roast Beef", 16)
         ).pack(side="left")
 
         tk.Button(

@@ -20,26 +20,28 @@ class MainController:
         else:
             print(f"Page '{name}' is not implemented yet.")
 
-    def add_to_order(self, item_name: str, price_str: str):
+    def add_to_order(self, item_name: str, price: int):
         try:
-            price = int(price_str.split()[0])
-
             # Increase quantity if item already exists
             for item in self.order:
-                if item['name'] == item_name:
-                    item['quantity'] += 1
+                if item["name"] == item_name:
+                    item["quantity"] += 1
                     self.refresh_order_panel()
                     return
 
-            self.order.append({'name': item_name, 'price': price, 'quantity': 1})
+            self.order.append({
+                "name": item_name,
+                "price": price,
+                "quantity": 1
+            })
             self.refresh_order_panel()
         except Exception as e:
             print(f"Error adding item: {e}")
 
     def change_quantity(self, index: int, delta: int):
         if 0 <= index < len(self.order):
-            self.order[index]['quantity'] += delta
-            if self.order[index]['quantity'] <= 0:
+            self.order[index]["quantity"] += delta
+            if self.order[index]["quantity"] <= 0:
                 del self.order[index]
             self.refresh_order_panel()
 
@@ -49,7 +51,7 @@ class MainController:
             self.refresh_order_panel()
 
     def get_total(self):
-        return sum(item['price'] * item['quantity'] for item in self.order)
+        return sum(item["price"] * item["quantity"] for item in self.order)
 
     def place_order(self):
         """Called when user clicks 'Place Order'"""
@@ -61,10 +63,8 @@ class MainController:
         print(f"Order placed! Total: {total} kr")
         print("Items:", self.order)
 
-        # Show confirmation page
         self.main_window.show_confirmation_page(self.order, total)
 
-        # Clear the order after placing
         self.order.clear()
         self.refresh_order_panel()
 

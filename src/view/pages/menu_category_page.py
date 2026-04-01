@@ -10,12 +10,12 @@ class MenuCategoryPage(tk.Frame):
         self.images = {}
 
         default_items = [
-            ("Grilled Salmon", "189 kr", "With lemon butter sauce, asparagus & potatoes", "grilled_salmon.jpg"),
-            ("Beef Burger", "145 kr", "Premium beef, cheddar, bacon & fries", "beef_burger.jpg"),
-            ("Chicken Parmesan", "165 kr", "Breaded chicken, marinara & mozzarella", "chicken_parmesan.jpg"),
-            ("Vegetable Stir Fry", "135 kr", "Mixed vegetables, tofu & teriyaki", "vegetable_stir_fry.jpg"),
-            ("Ribeye Steak", "229 kr", "250g steak with garlic butter", "ribeye_steak.jpg"),
-            ("Pasta Carbonara", "155 kr", "Classic Italian with pancetta", "pasta_carbonara.jpg"),
+            ("Grilled Salmon", 189, "With lemon butter sauce, asparagus & potatoes", "grilled_salmon.jpg"),
+            ("Beef Burger", 145, "Premium beef, cheddar, bacon & fries", "beef_burger.jpg"),
+            ("Chicken Parmesan", 165, "Breaded chicken, marinara & mozzarella", "chicken_parmesan.jpg"),
+            ("Vegetable Stir Fry", 135, "Mixed vegetables, tofu & teriyaki", "vegetable_stir_fry.jpg"),
+            ("Ribeye Steak", 229, "250g steak with garlic butter", "ribeye_steak.jpg"),
+            ("Pasta Carbonara", 155, "Classic Italian with pancetta", "pasta_carbonara.jpg"),
         ]
 
         self.items = items if items is not None else default_items
@@ -48,7 +48,6 @@ class MenuCategoryPage(tk.Frame):
             )
             item_frame.pack(fill="x", padx=20, pady=10)
 
-            # Image
             image_wrapper = tk.Frame(item_frame, bg="#33261f")
             image_wrapper.pack(side="left", padx=10, pady=10)
 
@@ -71,7 +70,6 @@ class MenuCategoryPage(tk.Frame):
                     height=3
                 ).pack()
 
-            # Info
             info_frame = tk.Frame(item_frame, bg="#33261f")
             info_frame.pack(side="left", fill="x", expand=True, padx=10, pady=12)
 
@@ -95,13 +93,12 @@ class MenuCategoryPage(tk.Frame):
                 wraplength=450
             ).pack(fill="x", pady=(4, 0))
 
-            # Price + Add
             right_frame = tk.Frame(item_frame, bg="#33261f")
             right_frame.pack(side="right", padx=15, pady=12)
 
             tk.Label(
                 right_frame,
-                text=price,
+                text=f"{price} kr",
                 bg="#33261f",
                 fg="#d6a34a",
                 font=("Arial", 12, "bold")

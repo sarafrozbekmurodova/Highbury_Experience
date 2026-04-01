@@ -39,8 +39,8 @@ class App:
 
         # Main Courses (FIXED INDENTATION)
         main_items = [
-            ("Steak", "189 kr", "Grilled steak with fries", "steak.jpg"),
-            ("Burger", "135 kr", "Beef burger with cheese", "burger.jpg"),
+            ("Steak", 189, "Grilled steak with fries", "steak.jpg"),
+            ("Burger", 135, "Beef burger with cheese", "burger.jpg"),
         ]
 
         main_page = MenuCategoryPage(
