@@ -47,18 +47,48 @@ class MenuCategoryPage(tk.Frame):
                 highlightthickness=1
             )
             item_frame.pack(fill="x", padx=20, pady=10)
+            # ---------- CARD HOVER EFFECT ----------
+            # Hover functions
+            def on_card_enter(e, frame=item_frame):
+                frame.config(
+                    bg="#3b2d25",
+                    highlightbackground="#d6a34a"
+                )
+
+            def on_card_leave(e, frame=item_frame):
+                frame.config(
+                    bg="#33261f",
+                    highlightbackground="#4a352b"
+                )
+
+            item_frame.bind("<Enter>", on_card_enter)
+            item_frame.bind("<Leave>", on_card_leave)
 
             image_wrapper = tk.Frame(item_frame, bg="#33261f")
             image_wrapper.pack(side="left", padx=10, pady=10)
 
             try:
-                img_path = f"assets/images/{img_filename}"
-                pil_img = Image.open(img_path).resize((120, 90), Image.LANCZOS)
-                tk_img = ImageTk.PhotoImage(pil_img)
-                self.images[name] = tk_img
+                img_path = f"data/images/{img_filename}"
 
-                img_label = tk.Label(image_wrapper, image=tk_img, bg="#33261f")
+                base_img = Image.open(img_path)
+
+                small = ImageTk.PhotoImage(base_img.resize((120, 90), Image.LANCZOS))
+                large = ImageTk.PhotoImage(base_img.resize((140, 105), Image.LANCZOS))
+
+                self.images[f"{name}_small"] = small
+                self.images[f"{name}_large"] = large
+
+                img_label = tk.Label(image_wrapper, image=small, bg="#33261f")
                 img_label.pack()
+
+                def img_enter(e, lbl=img_label, img=large):
+                    lbl.config(image=img)
+
+                def img_leave(e, lbl=img_label, img=small):
+                    lbl.config(image=img)
+
+                img_label.bind("<Enter>", img_enter)
+                img_label.bind("<Leave>", img_leave)
             except Exception:
                 tk.Label(
                     image_wrapper,
@@ -119,3 +149,15 @@ class MenuCategoryPage(tk.Frame):
                 command=lambda n=name, p=price: self.controller.add_to_order(n, p)
             )
             add_btn.pack()
+            def btn_enter(e):
+                add_btn.config(bg="#379567")
+
+            def btn_leave(e):
+                add_btn.config(bg="#2d7d57")
+
+            add_btn.bind("<Enter>", btn_enter)
+            add_btn.bind("<Leave>", btn_leave)
+            
+            for child in item_frame.winfo_children():
+                child.bind("<Enter>", on_card_enter, add="+")
+                child.bind("<Leave>", on_card_leave, add="+")
