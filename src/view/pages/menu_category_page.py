@@ -3,10 +3,12 @@ from PIL import Image, ImageTk
 
 
 class MenuCategoryPage(tk.Frame):
-    def __init__(self, parent, controller, title="Main Courses", items=None):
+    def __init__(self, parent, controller, title="Main Courses", items=None, language="EN"):
         super().__init__(parent, bg="#221a16")
         self.controller = controller
+        self.language = language
         self.title = title
+        self.raw_items = items if items is not None else default_items
         self.images = {}
 
         default_items = [
@@ -18,11 +20,38 @@ class MenuCategoryPage(tk.Frame):
             ("Pasta Carbonara", 155, "Classic Italian with pancetta", "pasta_carbonara.jpg"),
         ]
 
-        self.items = items if items is not None else default_items
+        self.raw_items = items if items is not None else default_items
 
         self.build_page()
+        
+    def get_text(self, key):
+        translations = {
+            "EN": {
+                "subtitle": "Choose from our selection and add items to your order.",
+                "add": "Add"
+            },
+            "SV": {
+                "subtitle": "Välj från vårt utbud och lägg till i din beställning.",
+                "add": "Lägg till"
+            }
+        }
+        return translations.get(self.language, translations["EN"]).get(key, key)
 
+    def process_items(self):
+        processed = []
+
+        for item in self.raw_items:
+            if isinstance(item, dict):
+                name = item["sv_name"] if self.language == "SV" else item["en_name"]
+                desc = item["sv_desc"] if self.language == "SV" else item["en_desc"]
+                processed.append((name, item["price"], desc, item["image"]))
+            else:
+                processed.append(item)
+
+        return processed
     def build_page(self):
+        for widget in self.winfo_children():
+                widget.destroy()
         tk.Label(
             self,
             text=self.title,
@@ -33,13 +62,13 @@ class MenuCategoryPage(tk.Frame):
 
         tk.Label(
             self,
-            text="Choose from our selection and add items to your order.",
+            text=self.get_text("subtitle"),
             bg="#221a16",
             fg="#c8b8aa",
             font=("Arial", 10)
         ).pack(anchor="w", padx=20, pady=(0, 12))
 
-        for name, price, desc, img_filename in self.items:
+        for name, price, desc, img_filename in self.process_items():
             item_frame = tk.Frame(
                 self,
                 bg="#33261f",
@@ -136,7 +165,7 @@ class MenuCategoryPage(tk.Frame):
 
             add_btn = tk.Button(
                 right_frame,
-                text="Add",
+                text=self.get_text("add"),
                 bg="#2d7d57",
                 fg="white",
                 activebackground="#379567",
@@ -161,3 +190,11 @@ class MenuCategoryPage(tk.Frame):
             for child in item_frame.winfo_children():
                 child.bind("<Enter>", on_card_enter, add="+")
                 child.bind("<Leave>", on_card_leave, add="+")
+
+    def refresh_language(self, new_language):
+        self.language = new_language
+
+        if self.title in ["Starters", "Förrätter"]:
+            self.title = "Förrätter" if new_language == "SV" else "Starters"
+
+        self.build_page()
