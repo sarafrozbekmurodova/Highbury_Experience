@@ -65,13 +65,14 @@ class MainWindow:
 
         self.top_nav_buttons = {}
         self.sidebar_buttons = {}
+        self.tip_buttons = {}
 
         self.build_top()
         self.build_left()
         self.build_hero()
         self.build_right()
 
-        self.update_order_list([], 0)
+        self.update_order_list([], 0, 0, 0.0)
         self.show_home()
 
     # =========================================================
@@ -138,7 +139,7 @@ class MainWindow:
 
         call_btn = tk.Button(
             right_top,
-            text="Call Service",
+            text="Call Staff",
             bg=self.red,
             fg="white",
             activebackground=self.red_hover,
@@ -236,70 +237,69 @@ class MainWindow:
         self.update_sidebar_highlight()
 
     # =========================================================
-    # Home / Hero
+    # Home / Start Screen
     # =========================================================
     def build_hero(self):
         for widget in self.hero_frame.winfo_children():
             widget.destroy()
 
-        welcome_card = tk.Frame(
-            self.hero_frame,
+        outer = tk.Frame(self.hero_frame, bg=self.bg_center)
+        outer.pack(fill="both", expand=True, padx=28, pady=28)
+
+        start_card = tk.Frame(
+            outer,
             bg=self.card_bg,
             highlightbackground=self.card_border,
-            highlightthickness=1,
-            height=420
+            highlightthickness=1
         )
-        welcome_card.pack(fill="both", expand=True, pady=(0, 18))
-        welcome_card.pack_propagate(False)
+        start_card.pack(expand=True)
 
-        inner = tk.Frame(welcome_card, bg=self.card_bg)
-        inner.place(relx=0.5, rely=0.5, anchor="center")
+        inner = tk.Frame(start_card, bg=self.card_bg)
+        inner.pack(padx=80, pady=70)
 
         tk.Label(
             inner,
             text="♛",
             bg=self.card_bg,
             fg=self.gold,
-            font=("Georgia", 28, "bold")
+            font=("Georgia", 30, "bold")
         ).pack(pady=(0, 10))
 
         tk.Label(
             inner,
-            text="Welcome to The Crown & Barrel",
+            text="The Crown & Barrel",
             bg=self.card_bg,
             fg=self.text_main,
-            font=("Georgia", 32, "bold")
+            font=("Georgia", 30, "bold")
         ).pack()
 
         tk.Label(
             inner,
-            text="Traditional British Pub Fare · Est. 1887",
+            text="Welcome. What would you like to do?",
             bg=self.card_bg,
             fg=self.text_soft,
-            font=("Georgia", 14)
-        ).pack(pady=(10, 22))
-
-        cta_frame = tk.Frame(inner, bg=self.card_bg)
-        cta_frame.pack()
+            font=("Arial", 13)
+        ).pack(pady=(12, 26))
 
         tk.Button(
-            cta_frame,
-            text="Menu",
+            inner,
+            text="Start Order",
             bg=self.green,
             fg="white",
             activebackground=self.green_hover,
             activeforeground="white",
             relief="flat",
             bd=0,
-            padx=22,
-            pady=12,
-            font=("Arial", 11, "bold"),
+            padx=36,
+            pady=14,
+            font=("Arial", 12, "bold"),
             cursor="hand2",
-            command=lambda: self.navigate_to_page("starters", "Starters")
-        ).pack(side="left", padx=8)
+            command=lambda: self.navigate_to_page("starters", "Starters"),
+            width=18
+        ).pack(pady=(0, 14))
 
         tk.Button(
-            cta_frame,
+            inner,
             text="Today's Special",
             bg=self.red,
             fg="white",
@@ -307,78 +307,12 @@ class MainWindow:
             activeforeground="white",
             relief="flat",
             bd=0,
-            padx=22,
-            pady=12,
-            font=("Arial", 11, "bold"),
+            padx=36,
+            pady=14,
+            font=("Arial", 12, "bold"),
             cursor="hand2",
-            command=self.show_special_page
-        ).pack(side="left", padx=8)
-
-        special_title = tk.Label(
-            self.hero_frame,
-            text="✧ Today's Special",
-            bg=self.bg_center,
-            fg=self.text_main,
-            font=("Georgia", 20, "bold")
-        )
-        special_title.pack(anchor="w", pady=(0, 12))
-
-        special_card = tk.Frame(
-            self.hero_frame,
-            bg=self.card_bg,
-            highlightbackground=self.card_border,
-            highlightthickness=1
-        )
-        special_card.pack(fill="x")
-
-        left = tk.Frame(special_card, bg=self.card_bg)
-        left.pack(side="left", fill="both", expand=True, padx=18, pady=16)
-
-        tk.Label(
-            left,
-            text="Sunday Roast Beef ✩",
-            bg=self.card_bg,
-            fg=self.text_main,
-            font=("Georgia", 16, "bold"),
-            anchor="w"
-        ).pack(anchor="w")
-
-        tk.Label(
-            left,
-            text="Slow-roasted sirloin with Yorkshire pudding, roast potatoes, seasonal vegetables and rich gravy",
-            bg=self.card_bg,
-            fg=self.text_soft,
-            font=("Arial", 10),
-            anchor="w",
-            justify="left",
-            wraplength=650
-        ).pack(anchor="w", pady=(8, 0))
-
-        right = tk.Frame(special_card, bg=self.card_bg)
-        right.pack(side="right", padx=18, pady=16)
-
-        tk.Label(
-            right,
-            text="£16.50",
-            bg=self.card_bg,
-            fg=self.gold,
-            font=("Arial", 16, "bold")
-        ).pack(pady=(0, 10))
-
-        tk.Button(
-            right,
-            text="+ Add",
-            bg=self.green,
-            fg="white",
-            activebackground=self.green_hover,
-            activeforeground="white",
-            relief="flat",
-            bd=0,
-            padx=18,
-            pady=10,
-            font=("Arial", 10, "bold"),
-            cursor="hand2",
-            command=lambda: self.controller.add_to_order("Sunday Roast Beef", 16)
+            command=self.show_special_page,
+            width=18
         ).pack()
 
     # =========================================================
@@ -534,11 +468,74 @@ class MainWindow:
             font=("Arial", 10)
         ).pack(side="left")
 
+        tip_frame = tk.Frame(self.right_frame, bg=self.bg_right)
+        tip_frame.pack(fill="x", padx=16, pady=(0, 10))
+
+        no_tip_btn = tk.Button(
+            tip_frame,
+            text="No Tip",
+            bg=self.green,
+            fg="white",
+            activebackground=self.green_hover,
+            activeforeground="white",
+            relief="flat",
+            bd=0,
+            padx=12,
+            pady=6,
+            font=("Arial", 10, "bold"),
+            cursor="hand2",
+            command=lambda: self.set_tip_mode(0.0)
+        )
+        no_tip_btn.pack(side="left", padx=(0, 8))
+
+        ten_tip_btn = tk.Button(
+            tip_frame,
+            text="10% Tip",
+            bg=self.bg_right,
+            fg=self.text_soft,
+            activebackground=self.green,
+            activeforeground="white",
+            relief="flat",
+            bd=0,
+            padx=12,
+            pady=6,
+            font=("Arial", 10),
+            cursor="hand2",
+            command=lambda: self.set_tip_mode(0.10)
+        )
+        ten_tip_btn.pack(side="left")
+
+        self.tip_buttons = {
+            0.0: no_tip_btn,
+            0.10: ten_tip_btn
+        }
+
         divider = tk.Frame(self.right_frame, bg=self.line, height=1)
         divider.pack(fill="x", padx=0, pady=(4, 8))
 
         self.order_list = tk.Frame(self.right_frame, bg=self.bg_right)
         self.order_list.pack(fill="both", expand=True, padx=10, pady=8)
+
+        totals_divider = tk.Frame(self.right_frame, bg=self.line, height=1)
+        totals_divider.pack(fill="x", padx=16, pady=(8, 10))
+
+        self.subtotal_label = tk.Label(
+            self.right_frame,
+            text="Subtotal: 0 kr",
+            fg=self.text_soft,
+            bg=self.bg_right,
+            font=("Arial", 11)
+        )
+        self.subtotal_label.pack(anchor="w", padx=16, pady=(0, 2))
+
+        self.tip_amount_label = tk.Label(
+            self.right_frame,
+            text="Tip: 0 kr",
+            fg=self.text_soft,
+            bg=self.bg_right,
+            font=("Arial", 11)
+        )
+        self.tip_amount_label.pack(anchor="w", padx=16, pady=(0, 2))
 
         self.total_label = tk.Label(
             self.right_frame,
@@ -547,7 +544,7 @@ class MainWindow:
             bg=self.bg_right,
             font=("Arial", 14, "bold")
         )
-        self.total_label.pack(anchor="w", padx=16, pady=(6, 10))
+        self.total_label.pack(anchor="w", padx=16, pady=(0, 10))
 
         self.place_order_btn = tk.Button(
             self.right_frame,
@@ -586,7 +583,7 @@ class MainWindow:
 
     def show_hero(self):
         if not self.hero_frame.winfo_manager():
-            self.hero_frame.pack(side="top", fill="both", expand=True, padx=18, pady=18)
+            self.hero_frame.pack(side="top", fill="both", expand=True)
 
     def hide_hero(self):
         if self.hero_frame.winfo_manager():
@@ -625,6 +622,7 @@ class MainWindow:
         self.hide_sidebar()
         self.hide_page_container()
         self.hide_special_container()
+        self.build_hero()
         self.show_hero()
 
         self.update_sidebar_highlight()
@@ -687,16 +685,39 @@ class MainWindow:
                     font=("Arial", 11)
                 )
 
+    def set_tip_mode(self, tip_percentage):
+        self.controller.set_tip_percentage(tip_percentage)
+        self.update_tip_buttons(tip_percentage)
+
+    def update_tip_buttons(self, active_tip_percentage):
+        for tip_value, btn in self.tip_buttons.items():
+            if tip_value == active_tip_percentage:
+                btn.config(
+                    bg=self.green,
+                    fg="white",
+                    activebackground=self.green_hover,
+                    activeforeground="white",
+                    font=("Arial", 10, "bold")
+                )
+            else:
+                btn.config(
+                    bg=self.bg_right,
+                    fg=self.text_soft,
+                    activebackground=self.green,
+                    activeforeground="white",
+                    font=("Arial", 10)
+                )
+
     def call_service(self):
         popup = tk.Toplevel(self.root)
-        popup.title("Call Service")
+        popup.title("Call Staff")
         popup.configure(bg=self.bg_center)
         popup.geometry("320x180")
         popup.resizable(False, False)
 
         tk.Label(
             popup,
-            text="Service has been called.",
+            text="Staff has been called.",
             bg=self.bg_center,
             fg=self.text_main,
             font=("Arial", 14, "bold")
@@ -729,9 +750,13 @@ class MainWindow:
     # =========================================================
     # Order panel updates
     # =========================================================
-    def update_order_list(self, order_items, total):
+    def update_order_list(self, order_items, subtotal, total, tip_percentage):
         for widget in self.order_list.winfo_children():
             widget.destroy()
+
+        self.update_tip_buttons(tip_percentage)
+
+        tip_amount = total - subtotal
 
         if not order_items:
             tk.Label(
@@ -743,6 +768,8 @@ class MainWindow:
                 justify="center"
             ).pack(expand=True, pady=80)
 
+            self.subtotal_label.config(text="Subtotal: 0 kr")
+            self.tip_amount_label.config(text="Tip: 0 kr")
             self.total_label.config(text="Total: 0 kr")
             return
 
@@ -840,12 +867,14 @@ class MainWindow:
                 font=("Arial", 11, "bold")
             ).pack(side="right")
 
+        self.subtotal_label.config(text=f"Subtotal: {subtotal} kr")
+        self.tip_amount_label.config(text=f"Tip: {tip_amount} kr")
         self.total_label.config(text=f"Total: {total} kr")
 
     # =========================================================
     # Confirmation page
     # =========================================================
-    def show_confirmation_page(self, order_items, total):
+    def show_confirmation_page(self, order_items, subtotal, total, tip_percentage):
         if self.confirmation_page is None:
             self.confirmation_page = tk.Frame(self.page_container, bg=self.bg_center)
             self.confirmation_page.grid(row=0, column=0, sticky="nsew")
@@ -892,9 +921,16 @@ class MainWindow:
                 command=self.go_back_to_menu
             ).pack(pady=30)
 
+        tip_amount = total - subtotal
+
         summary = "Order Summary:\n\n"
         for item in order_items:
             summary += f"• {item['quantity']} x {item['name']}   ({item['price'] * item['quantity']} kr)\n"
+
+        summary += f"\nSubtotal: {subtotal} kr"
+        summary += f"\nTip: {tip_amount} kr"
+        if tip_percentage > 0:
+            summary += f" ({int(tip_percentage * 100)}%)"
         summary += f"\nTotal: {total} kr"
 
         self.order_summary_label.config(text=summary)
