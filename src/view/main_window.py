@@ -2,7 +2,7 @@ import tkinter as tk
 from view.components.order_panel import OrderPanel
 from view.components.menu_panel import Sidebar
 from view.components.top_panel import TopPanel
-
+from view.components.hero_panel import HeroPanel
 class MainWindow:
     def __init__(self, root, controller):
         self.root = root
@@ -61,7 +61,8 @@ class MainWindow:
         self.right_frame = self.order_panel.frame
 
         # ---------- Center content containers ----------
-        self.hero_frame = tk.Frame(self.center_frame, bg=self.bg_center)
+        self.hero_panel = HeroPanel(self.center_frame, self)
+        self.hero_frame = self.hero_panel.frame        
         self.page_container = tk.Frame(self.center_frame, bg=self.bg_center)
         self.special_frame = tk.Frame(self.center_frame, bg=self.bg_center)
 
@@ -123,82 +124,7 @@ class MainWindow:
     # Home / Start Screen
     # =========================================================
     def build_hero(self):
-        for widget in self.hero_frame.winfo_children():
-            widget.destroy()
-
-        t = self.translations[self.current_language]
-
-        outer = tk.Frame(self.hero_frame, bg=self.bg_center)
-        outer.pack(fill="both", expand=True, padx=28, pady=28)
-
-        start_card = tk.Frame(
-            outer,
-            bg=self.card_bg,
-            highlightbackground=self.card_border,
-            highlightthickness=1
-        )
-        start_card.pack(expand=True)
-
-        inner = tk.Frame(start_card, bg=self.card_bg)
-        inner.pack(padx=80, pady=70)
-
-        tk.Label(
-            inner,
-            text="♛",
-            bg=self.card_bg,
-            fg=self.gold,
-            font=("Georgia", 30, "bold")
-        ).pack(pady=(0, 10))
-
-        tk.Label(
-            inner,
-            text=t["welcome"],
-            bg=self.card_bg,
-            fg=self.text_main,
-            font=("Georgia", 30, "bold")
-        ).pack()
-
-        tk.Label(
-            inner,
-            text=t["tagline"],
-            bg=self.card_bg,
-            fg=self.text_soft,
-            font=("Arial", 13)
-        ).pack(pady=(12, 26))
-
-        tk.Button(
-            inner,
-            text=t["start_order"],
-            bg=self.green,
-            fg="white",
-            activebackground=self.green_hover,
-            activeforeground="white",
-            relief="flat",
-            bd=0,
-            padx=36,
-            pady=14,
-            font=("Arial", 12, "bold"),
-            cursor="hand2",
-            command=lambda: self.navigate_to_page("starters", t["starters"]),
-            width=18
-        ).pack(pady=(0, 14))
-
-        tk.Button(
-            inner,
-            text=t["todays_special"],
-            bg=self.red,
-            fg="white",
-            activebackground=self.red_hover,
-            activeforeground="white",
-            relief="flat",
-            bd=0,
-            padx=36,
-            pady=14,
-            font=("Arial", 12, "bold"),
-            cursor="hand2",
-            command=self.show_special_page,
-            width=18
-        ).pack()
+        self.hero_panel.build()
 
     # =========================================================
     # Dedicated Today's Special page
