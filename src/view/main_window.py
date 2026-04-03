@@ -1,7 +1,7 @@
 import tkinter as tk
 from view.components.order_panel import OrderPanel
 from view.components.menu_panel import Sidebar
-
+from view.components.top_panel import TopPanel
 
 class MainWindow:
     def __init__(self, root, controller):
@@ -43,9 +43,8 @@ class MainWindow:
         self.root.option_add("*Button.takeFocus", 0)
 
         # ---------- Root layout ----------
-        self.top_frame = tk.Frame(self.root, bg=self.bg_top, height=68)
-        self.top_frame.pack(side="top", fill="x")
-        self.top_frame.pack_propagate(False)
+        self.top_panel = TopPanel(self.root, self)
+        self.top_frame = self.top_panel.frame
 
         self.body_frame = tk.Frame(self.root, bg=self.bg_main)
         self.body_frame.pack(side="top", fill="both", expand=True)
@@ -70,9 +69,7 @@ class MainWindow:
         self.page_container.grid_columnconfigure(0, weight=1)
 
         self.confirmation_page = None
-        self.special_page = None
-
-        self.top_nav_buttons = {}
+        self.special_page = None        
 
         self.build_top()
         self.build_hero()
@@ -118,106 +115,9 @@ class MainWindow:
     # Top Bar
     # =========================================================
     def build_top(self):
-        for widget in self.top_frame.winfo_children():
-            widget.destroy()
+        self.top_panel.build()
 
-        t = self.translations[self.current_language]
-        self.top_nav_buttons = {}
 
-        brand_frame = tk.Frame(self.top_frame, bg=self.bg_top)
-        brand_frame.pack(side="left", padx=18)
-
-        tk.Label(
-            brand_frame,
-            text=t["brand"],
-            bg=self.bg_top,
-            fg=self.text_main,
-            font=("Georgia", 18, "bold")
-        ).pack(side="left", pady=14)
-
-        nav_frame = tk.Frame(self.top_frame, bg=self.bg_top)
-        nav_frame.pack(side="left", padx=40)
-
-        nav_items = [
-            ("Home", t["home"], self.show_home),
-            ("Menu", t["menu"], lambda: self.navigate_to_page("starters", t["starters"])),
-            ("Today's Special", t["todays_special"], self.show_special_page),
-            ("My Order", t["my_order"], None),
-        ]
-
-        for internal_name, text, cmd in nav_items:
-            if cmd:
-                btn = tk.Button(
-                    nav_frame,
-                    text=text,
-                    command=cmd,
-                    bg=self.bg_top,
-                    fg=self.text_soft,
-                    activebackground=self.bg_top,
-                    activeforeground=self.text_main,
-                    relief="flat",
-                    padx=16,
-                    pady=10,
-                    font=("Arial", 11),
-                    cursor="hand2"
-                )
-            else:
-                btn = tk.Button(
-                    nav_frame,
-                    text=text,
-                    state="disabled",
-                    disabledforeground=self.text_muted,
-                    bg=self.bg_top,
-                    relief="flat",
-                    padx=16,
-                    pady=10,
-                    font=("Arial", 11)
-                )
-
-            btn.pack(side="left", padx=8, pady=10)
-            self.top_nav_buttons[internal_name] = btn
-
-        right_top = tk.Frame(self.top_frame, bg=self.bg_top)
-        right_top.pack(side="right", padx=18)
-
-        call_btn = tk.Button(
-            right_top,
-            text=t["call_service"],
-            bg=self.red,
-            fg="white",
-            activebackground=self.red_hover,
-            activeforeground="white",
-            relief="flat",
-            bd=0,
-            padx=18,
-            pady=10,
-            font=("Arial", 11, "bold"),
-            cursor="hand2",
-            command=self.call_service
-        )
-        call_btn.pack(side="left", padx=(0, 18), pady=10)
-
-        lang_frame = tk.Frame(right_top, bg=self.bg_top)
-        lang_frame.pack(side="left")
-
-        for code in ["EN", "SV", "DE"]:
-            active = code == self.current_language
-            btn = tk.Button(
-                lang_frame,
-                text=code,
-                bg=self.gold if active else self.bg_top,
-                fg="#1b140f" if active else self.text_soft,
-                activebackground=self.gold,
-                activeforeground="#1b140f",
-                relief="flat",
-                bd=0,
-                padx=10,
-                pady=6,
-                font=("Arial", 10, "bold"),
-                cursor="hand2",
-                command=lambda c=code: self.switch_language(c)
-            )
-            btn.pack(side="left", padx=3)
 
     # =========================================================
     # Home / Start Screen
@@ -506,26 +406,7 @@ class MainWindow:
         self.sidebar.update_highlight(self.current_sidebar_selection)
 
     def update_top_nav_highlight(self, active_name):
-        for label, btn in self.top_nav_buttons.items():
-            if str(btn.cget("state")) == "disabled":
-                continue
-
-            if label == active_name:
-                btn.config(
-                    bg=self.green,
-                    fg="white",
-                    activebackground=self.green_hover,
-                    activeforeground="white",
-                    font=("Arial", 11, "bold")
-                )
-            else:
-                btn.config(
-                    bg=self.bg_top,
-                    fg=self.text_soft,
-                    activebackground=self.bg_top,
-                    activeforeground=self.text_main,
-                    font=("Arial", 11)
-                )
+        self.top_panel.update_highlight(active_name)    
 
     def call_service(self):
         popup = tk.Toplevel(self.root)
