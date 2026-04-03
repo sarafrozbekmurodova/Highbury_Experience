@@ -773,7 +773,7 @@ class MainWindow:
 
     def call_service(self):
         popup = tk.Toplevel(self.root)
-        popup.title(t["call_service"])
+        popup.title("Call Service")
         popup.configure(bg=self.bg_center)
         popup.geometry("320x180")
         popup.resizable(False, False)
