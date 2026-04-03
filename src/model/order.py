@@ -11,12 +11,19 @@ class Order:
                 return item
         return None
 
-    def add_item(self, item_id: str, name: str, price: int) -> None:
+    def add_item(self, item_id: str, name: str, price: int, name_key: str | None = None) -> None:
         existing_item = self.find_item(item_id)
         if existing_item:
             existing_item.increase()
         else:
-            self.items.append(OrderItem(item_id=item_id, name=name, price=price, quantity=1))
+            order_item = OrderItem(
+                item_id=item_id,
+                name=name,
+                price=price,
+                quantity=1
+            )
+            order_item.name_key = name_key
+            self.items.append(order_item)
 
     def change_quantity(self, item_id: str, delta: int) -> None:
         item = self.find_item(item_id)
@@ -48,6 +55,7 @@ class Order:
             {
                 "item_id": item.item_id,
                 "name": item.name,
+                "name_key": getattr(item, "name_key", None),
                 "price": item.price,
                 "quantity": item.quantity,
             }

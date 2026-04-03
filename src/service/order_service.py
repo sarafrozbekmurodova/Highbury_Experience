@@ -9,10 +9,11 @@ class OrderService:
         order = self.order_repository.get_order()
 
         item_id = item_data.get("item_id") or item_data.get("name_key") or item_data["name"]
+        name_key = item_data.get("name_key")
         name = item_data["name"]
         price = item_data["price"]
 
-        order.add_item(item_id=item_id, name=name, price=price)
+        order.add_item(item_id=item_id, name=name, price=price, name_key=name_key)
         self.order_repository.save_order(order)
 
     def change_quantity(self, item_id: str, delta: int) -> None:

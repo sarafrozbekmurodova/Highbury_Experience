@@ -1,5 +1,5 @@
 import tkinter as tk
-from tkinter import messagebox
+
 
 class MainWindow:
     def __init__(self, root, controller):
@@ -106,7 +106,8 @@ class MainWindow:
 
         if self.current_page == "special":
             self.build_special_page()
-        self.update_place_order_button()
+
+        self.controller.refresh_order_panel()
 
     def refresh_ui(self):
         self.build_top()
@@ -202,7 +203,7 @@ class MainWindow:
         lang_frame.pack(side="left")
 
         for code in ["EN", "SV", "DE"]:
-            active = (code == self.current_language)
+            active = code == self.current_language
             btn = tk.Button(
                 lang_frame,
                 text=code,
@@ -612,11 +613,10 @@ class MainWindow:
             height=2,
             relief="flat",
             bd=0,
-            command=self.show_order_confirmation,
+            command=self.controller.place_order,
             cursor="hand2"
         )
         self.place_order_btn.pack(fill="x", padx=16, pady=(0, 16))
-        self.update_place_order_button()
 
     # =========================================================
     # Layout visibility helpers
@@ -844,9 +844,12 @@ class MainWindow:
             top_row = tk.Frame(item_frame, bg=self.card_bg)
             top_row.pack(fill="x", padx=10, pady=(8, 4))
 
+            name_key = item.get("name_key")
+            display_name = self.controller.t(name_key) if name_key else item["name"]
+
             tk.Label(
                 top_row,
-                text=item["name"],
+                text=display_name,
                 fg=self.text_main,
                 bg=self.card_bg,
                 anchor="w",
@@ -931,21 +934,7 @@ class MainWindow:
         self.subtotal_label.config(text=f"{t['sub_total']}: {subtotal} kr")
         self.tip_amount_label.config(text=f"{t['tip']}: {tip_amount} kr")
         self.total_label.config(text=f"{t['total']}: {total} kr")
-        self.update_place_order_button()
-    def update_place_order_button(self):
-        if not hasattr(self, 'place_order_btn') or self.place_order_btn is None:
-            return
 
-        try:
-            order_items, _ = self.controller.order_service.get_order_summary()
-
-            if len(order_items) > 0:
-                self.place_order_btn.config(state="normal")
-            else:
-                self.place_order_btn.config(state="disabled")
-
-        except Exception as e:
-            print(f"[DEBUG] Error updating button: {e}")
     # =========================================================
     # Confirmation page
     # =========================================================
@@ -996,121 +985,25 @@ class MainWindow:
                 command=self.go_back_to_menu
             ).pack(pady=30)
 
-        # Build summary (even if empty)
-        summary = "Order Summary:\n\n"
-        if order_items:
-            for item in order_items:
-                summary += f"• {item['quantity']} x {item['name']}   ({item['price'] * item['quantity']} kr)\n"
-        else:
-            summary += "Your order has been successfully placed!\nThank you for dining with us."
+        tip_amount = total - subtotal
 
-        summary += f"\n\nTotal: {total} kr"
+        summary = "Order Summary:\n\n"
+        for item in order_items:
+            display_name = self.controller.t(item["name_key"]) if item.get("name_key") else item["name"]
+            summary += f"• {item['quantity']} x {display_name}   ({item['price'] * item['quantity']} kr)\n"
+
+        summary += f"\nSubtotal: {subtotal} kr"
+        summary += f"\nTip: {tip_amount} kr"
+        if tip_percentage > 0:
+            summary += f" ({int(tip_percentage * 100)}%)"
+        summary += f"\nTotal: {total} kr"
 
         self.order_summary_label.config(text=summary)
-        
         self.show_page_container()
         self.hide_hero()
         self.hide_special_container()
         self.hide_sidebar()
         self.confirmation_page.tkraise()
-        
-# ====================== CONFIRMATION DIALOG ======================
-    def show_order_confirmation(self):
-        order_items, subtotal = self.controller.order_service.get_order_summary()
-        
-        if not order_items:
-            tk.messagebox.showwarning("Empty Order", "Please add some items to your order first.")
-            return
-
-        t = self.translations[self.current_language]
-
-        confirm_win = tk.Toplevel(self.root)
-        confirm_win.title(t.get("confirm_order", "Confirm Order"))
-        confirm_win.configure(bg="#221a16")
-        confirm_win.geometry("520x680")
-        confirm_win.resizable(False, False)
-        confirm_win.grab_set()
-
-        tk.Label(
-            confirm_win,
-            text="🛎️ " + t.get("confirm_order", "Confirm Order"),
-            font=("Georgia", 20, "bold"),
-            fg="#f5efe8",
-            bg="#221a16"
-        ).pack(pady=20)
-
-        summary_frame = tk.Frame(confirm_win, bg="#33261f", bd=2, relief="solid")
-        summary_frame.pack(fill="both", expand=True, padx=30, pady=10)
-
-        tk.Label(
-            summary_frame,
-            text="Your Order",
-            bg="#33261f",
-            fg="#d6a34a",
-            font=("Arial", 12, "bold")
-        ).pack(pady=(15, 8))
-
-        total = 0
-        for item in order_items:
-            item_total = item["price"] * item["quantity"]
-            total += item_total
-            row = tk.Frame(summary_frame, bg="#33261f")
-            row.pack(fill="x", padx=25, pady=5)
-            tk.Label(row, text=f"{item['quantity']}x {item['name']}",
-                     bg="#33261f", fg="#f5efe8", anchor="w").pack(side="left")
-            tk.Label(row, text=f"{item_total} kr",
-                     bg="#33261f", fg="#d6a34a", font=("Arial", 10, "bold")).pack(side="right")
-
-        # Total
-        tk.Frame(summary_frame, bg="#4a382f", height=2).pack(fill="x", pady=12)
-        total_frame = tk.Frame(summary_frame, bg="#33261f")
-        total_frame.pack(fill="x", padx=25, pady=8)
-        tk.Label(total_frame, text="Subtotal", bg="#33261f", fg="#f5efe8", font=("Arial", 11)).pack(side="left")
-        tk.Label(total_frame, text=f"{subtotal} kr", bg="#33261f", fg="#d6a34a",
-                 font=("Arial", 16, "bold")).pack(side="right")
-
-        # Tip
-        tip_amount = round(subtotal * self.controller.order_repository.get_tip_percentage())
-        tip_frame = tk.Frame(summary_frame, bg="#33261f")
-        tip_frame.pack(fill="x", padx=25, pady=5)
-        tk.Label(tip_frame, text="Tip", bg="#33261f", fg="#f5efe8", font=("Arial", 11)).pack(side="left")
-        tk.Label(tip_frame, text=f"{tip_amount} kr", bg="#33261f", fg="#d6a34a", font=("Arial", 16, "bold")).pack(side="right")
-
-        # Grand total
-        grand_total = subtotal + tip_amount
-        tk.Frame(summary_frame, bg="#4a382f", height=2).pack(fill="x", pady=12)
-        total_frame2 = tk.Frame(summary_frame, bg="#33261f")
-        total_frame2.pack(fill="x", padx=25, pady=8)
-        tk.Label(total_frame2, text="Total", bg="#33261f", fg="#f5efe8", font=("Arial", 11)).pack(side="left")
-        tk.Label(total_frame2, text=f"{grand_total} kr", bg="#33261f", fg="#d6a34a",
-                 font=("Arial", 16, "bold")).pack(side="right")
-
-        # Warning
-        tk.Label(confirm_win, text="Are you sure you want to place this order?\nThis action cannot be undone.",
-                 bg="#221a16", fg="#c8b8aa", font=("Arial", 10), justify="center").pack(pady=20)
-
-        # Buttons
-        btn_frame = tk.Frame(confirm_win, bg="#221a16")
-        btn_frame.pack(pady=25)
-
-        tk.Button(btn_frame, text="Cancel", bg="#4a352b", fg="white", width=12, height=2,
-                  font=("Arial", 11), relief="flat", command=confirm_win.destroy).pack(side="left", padx=12)
-
-        tk.Button(btn_frame, text="✅ Yes, Place Order", bg="#2d7d57", fg="white", width=20, height=2,
-                  font=("Arial", 11, "bold"), relief="flat",
-                  command=lambda: self.finalize_order(confirm_win)).pack(side="left", padx=12)
-
-
-    # ====================== FINALIZE ORDER ======================
-    def finalize_order(self, window):
-        """Finalize the order, show confirmation page, and reset the order"""
-        window.destroy()
-        order_items, subtotal = self.controller.order_service.place_order()
-        total = subtotal + round(subtotal * self.controller.order_repository.get_tip_percentage())
-        tip_percentage = self.controller.order_repository.get_tip_percentage()
-        self.show_confirmation_page(order_items, subtotal, total, tip_percentage)
-        self.controller.order_service.clear_order()
-        self.build_right()
 
     def go_back_to_menu(self):
         t = self.translations[self.current_language]
