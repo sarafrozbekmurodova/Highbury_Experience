@@ -39,15 +39,25 @@ class App:
 
         # Main Courses (FIXED INDENTATION)
         main_items = [
-            ("Steak", 189, "Grilled steak with fries", "steak.jpg"),
-            ("Burger", 135, "Beef burger with cheese", "burger.jpg"),
+            {
+                "name_key": "steak",
+                "desc_key": "steak_desc",
+                "price": 189,
+                "image": "steak.jpg"
+            },
+            {
+                "name_key": "burger",
+                "desc_key": "burger_desc",
+                "price": 135,
+                "image": "burger.jpg"
+            },
         ]
 
         main_page = MenuCategoryPage(
             self.main_window.page_container,
             self.controller,
-            title="Main Courses",
-            items=main_items
+            main_items,
+            "main_courses"
         )
 
         self.controller.register_page("main", main_page)

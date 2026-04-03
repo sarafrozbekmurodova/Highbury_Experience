@@ -1,15 +1,19 @@
 # src/controller/main_controller.py
-
+from controller.translations import translations
 class MainController:
     def __init__(self, root):
         self.root = root
         self.main_window = None
         self.pages = {}
+        self.translations = translations
         self.order = []   # List of dicts: {'name': str, 'price': int, 'quantity': int}
 
         # Tip state
         self.tip_percentage = 0.0
 
+    def t(self, key):
+        lang = getattr(self.main_window, "current_language", "en")
+        return self.main_window.translations.get(lang, {}).get(key, key)
     def set_main_window(self, main_window):
         self.main_window = main_window
 

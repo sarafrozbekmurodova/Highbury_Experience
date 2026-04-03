@@ -1,15 +1,14 @@
 from view.pages.menu_category_page import MenuCategoryPage
 
-
 class DessertsPage(MenuCategoryPage):
     def __init__(self, parent, controller):
         dessert_items = [
-            ("Chocolate Lava Cake", 75, "Warm chocolate cake with molten center & vanilla ice cream", "chocolate_lava.jpg"),
-            ("Tiramisu", 68, "Classic Italian coffee-flavored dessert", "tiramisu.jpg"),
-            ("New York Cheesecake", 72, "With strawberry coulis", "cheesecake.jpg"),
-            ("Crème Brûlée", 65, "Vanilla custard with caramelized sugar", "creme_brulee.jpg"),
-            ("Apple Pie à la Mode", 59, "Warm apple pie served with vanilla ice cream", "apple_pie.jpg"),
-            ("Panna Cotta", 62, "With berry compote", "panna_cotta.jpg"),
+            {"name_key": "chocolate_lava_cake", "desc_key": "chocolate_lava_cake_desc", "price": 75, "image": "chocolate_lava.jpg"},
+            {"name_key": "tiramisu", "desc_key": "tiramisu_desc", "price": 68, "image": "tiramisu.jpg"},
+            {"name_key": "new_york_cheesecake", "desc_key": "new_york_cheesecake_desc", "price": 72, "image": "cheesecake.jpg"},
+            {"name_key": "creme_brulee", "desc_key": "creme_brulee_desc", "price": 65, "image": "creme_brulee.jpg"},
+            {"name_key": "apple_pie_a_la_mode", "desc_key": "apple_pie_a_la_mode_desc", "price": 59, "image": "apple_pie.jpg"},
+            {"name_key": "panna_cotta", "desc_key": "panna_cotta_desc", "price": 62, "image": "panna_cotta.jpg"},
         ]
 
-        super().__init__(parent, controller, title="Desserts", items=dessert_items)
+        super().__init__(parent, controller, dessert_items, category_key="desserts")

@@ -5,72 +5,10 @@ class MainWindow:
     def __init__(self, root, controller):
         self.root = root
         self.controller = controller
-        
+        self.translations = controller.translations
+        self.current_language = "en"
         # ---------- Language Support ----------
-        self.current_language = "EN"   # Default: English
-        self.translations = {
-            "EN": {
-                "brand": "♛ The Crown & Barrel",
-                "menu": "Menu",
-                "starters": "Starters",
-                "light_courses": "Light Courses",
-                "main_courses": "Main Courses",
-                "set_meals": "Set Meals",
-                "desserts": "Desserts",
-                "beverages": "Beverages",
-                "home": "Home",
-                "todays_special": "Today's Special",
-                "my_order": "My Order",
-                "call_service": "Call Service",
-                "order_summary": "Order Summary",
-                "single_order": "Single Order",
-                "group_order": "Group Order",
-                "total": "Total",
-                "sub_total": "Subtotal",
-                "tip": "Tip",
-                "place_order": "Place Order",
-                "empty_order": "Your order is empty.\nBrowse our menu and add items.",
-                "welcome": "Welcome to The Crown & Barrel",
-                "tagline": "Traditional British Pub Fare · Est. 1887",
-                "sunday_roast": "Sunday Roast Beef ✩",
-                "sunday_roast_desc": "Slow-roasted sirloin with Yorkshire pudding, roast potatoes, seasonal vegetables and rich gravy",
-                "add": "+ Add",
-                "add_to_order": "+ Add to Order",
-                "back_to_home": "Back to Home",
-                "start_order": "Start Order"
-            },
-            "SV": {
-                "brand": "♛ Krona & Tunnan",
-                "menu": "Meny",
-                "starters": "Förrätter",
-                "light_courses": "Lätta Rätter",
-                "main_courses": "Huvudrätter",
-                "set_meals": "Måltidspaket",
-                "desserts": "Efterrätter",
-                "beverages": "Drycker",
-                "home": "Hem",
-                "todays_special": "Dagens Special",
-                "my_order": "Min Beställning",
-                "call_service": "Kalla på Service",
-                "order_summary": "Beställningsöversikt",
-                "single_order": "Enskild beställning",
-                "group_order": "Gruppbeställning",
-                "total": "Totalt",
-                "sub_total": "Delsumma",
-                "tip": "Tip",
-                "place_order": "Lägg Beställning",
-                "empty_order": "Din beställning är tom.\nBläddra i menyn och lägg till varor.",
-                "welcome": "Välkommen till Krona & Tunnan",
-                "tagline": "Traditionell brittisk pubmat · Est. 1887",
-                "sunday_roast": "Söndagsstekt Oxfilé ✩",
-                "sunday_roast_desc": "Långtidsstekt oxfilé med yorkshirepudding, rostade potatisar, säsongens grönsaker och rik gravy",
-                "add": "+ Lägg till",
-                "add_to_order": "+ Lägg till i beställning",
-                "back_to_home": "Tillbaka till Hem",
-                "start_order": "Starta beställning"
-            }
-        }
-
+        
         # ---------- State ----------
         self.current_page = "home"
         self.current_sidebar_selection = None

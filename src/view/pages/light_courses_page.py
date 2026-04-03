@@ -1,14 +1,13 @@
 from view.pages.menu_category_page import MenuCategoryPage
 
-
 class LightCoursesPage(MenuCategoryPage):
     def __init__(self, parent, controller):
         light_items = [
-            ("Caesar Salad", 95, "Crisp romaine, parmesan, croutons & Caesar dressing", "caesar_salad.jpg"),
-            ("Tomato Soup", 85, "Creamy tomato soup with basil & bread", "tomato_soup.jpg"),
-            ("Chicken Wrap", 105, "Grilled chicken, salad & garlic sauce", "chicken_wrap.jpg"),
-            ("Avocado Toast", 89, "Sourdough with smashed avocado & chili flakes", "avocado_toast.jpg"),
-            ("Mini Fish & Chips", 110, "Light portion with tartar sauce", "fish_chips.jpg"),
+            {"name_key": "caesar_salad", "desc_key": "caesar_salad_desc", "price": 95, "image": "caesar_salad.jpg"},
+            {"name_key": "tomato_soup", "desc_key": "tomato_soup_desc", "price": 85, "image": "tomato_soup.jpg"},
+            {"name_key": "chicken_wrap", "desc_key": "chicken_wrap_desc", "price": 105, "image": "chicken_wrap.jpg"},
+            {"name_key": "avocado_toast", "desc_key": "avocado_toast_desc", "price": 89, "image": "avocado_toast.jpg"},
+            {"name_key": "mini_fish_chips", "desc_key": "mini_fish_chips_desc", "price": 110, "image": "fish_chips.jpg"},
         ]
 
-        super().__init__(parent, controller, title="Light Courses", items=light_items)
+        super().__init__(parent, controller, light_items, category_key="light_courses")

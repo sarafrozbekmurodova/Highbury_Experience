@@ -1,80 +1,100 @@
 import tkinter as tk
 from PIL import Image, ImageTk
-
+import os
 
 class MenuCategoryPage(tk.Frame):
-    def __init__(self, parent, controller, title="Main Courses", items=None, language="EN"):
+    def __init__(self, parent, controller, items, category_key):
         super().__init__(parent, bg="#221a16")
         self.controller = controller
-        self.language = language
-        self.title = title
-        self.raw_items = items if items is not None else default_items
+        self.main_window = getattr(controller, "main_window", None)
+
+        self.items = items
+        self.category_key = category_key
         self.images = {}
 
         default_items = [
-            ("Grilled Salmon", 189, "With lemon butter sauce, asparagus & potatoes", "grilled_salmon.jpg"),
-            ("Beef Burger", 145, "Premium beef, cheddar, bacon & fries", "beef_burger.jpg"),
-            ("Chicken Parmesan", 165, "Breaded chicken, marinara & mozzarella", "chicken_parmesan.jpg"),
-            ("Vegetable Stir Fry", 135, "Mixed vegetables, tofu & teriyaki", "vegetable_stir_fry.jpg"),
-            ("Ribeye Steak", 229, "250g steak with garlic butter", "ribeye_steak.jpg"),
-            ("Pasta Carbonara", 155, "Classic Italian with pancetta", "pasta_carbonara.jpg"),
+            {
+                "name_key": "grilled_salmon",
+                "desc_key": "grilled_salmon_desc",
+                "price": 189,
+                "image": "grilled_salmon.jpg"
+            },
+            {
+                "name_key": "beef_burger",
+                "desc_key": "beef_burger_desc",
+                "price": 145,
+                "image": "beef_burger.jpg"
+            },
+            {
+                "name_key": "chicken_parmesan",
+                "desc_key": "chicken_parmesan_desc",
+                "price": 165,
+                "image": "chicken_parmesan.jpg"
+            },
+            {
+                "name_key": "vegetable_stir_fry",
+                "desc_key": "vegetable_stir_fry_desc",
+                "price": 135,
+                "image": "vegetable_stir_fry.jpg"
+            },
+            {
+                "name_key": "ribeye_steak",
+                "desc_key": "ribeye_steak_desc",
+                "price": 229,
+                "image": "ribeye_steak.jpg"
+            },
+            {
+                "name_key": "pasta_carbonara",
+                "desc_key": "pasta_carbonara_desc",
+                "price": 155,
+                "image": "pasta_carbonara.jpg"
+            },
         ]
-
-        self.raw_items = items if items is not None else default_items
-
+        if hasattr(controller, "t") and callable(controller.t):
+            self.t = controller.t
+        else:
+            self.t = lambda key: key
+        self.title_key = category_key
         self.build_page()
         
-    def get_text(self, key):
-        translations = {
-            "EN": {
-                "subtitle": "Choose from our selection and add items to your order.",
-                "add": "Add"
-            },
-            "SV": {
-                "subtitle": "Välj från vårt utbud och lägg till i din beställning.",
-                "add": "Lägg till"
-            }
-        }
-        return translations.get(self.language, translations["EN"]).get(key, key)
-
-    def process_items(self):
-        processed = []
-
-        for item in self.raw_items:
-            if isinstance(item, dict):
-                name = item["sv_name"] if self.language == "SV" else item["en_name"]
-                desc = item["sv_desc"] if self.language == "SV" else item["en_desc"]
-                processed.append((name, item["price"], desc, item["image"]))
-            else:
-                processed.append(item)
-
-        return processed
+    
     def build_page(self):
         for widget in self.winfo_children():
-                widget.destroy()
+            widget.destroy()
+
         tk.Label(
             self,
-            text=self.title,
+            text=self.t(self.title_key),
             bg="#221a16",
             fg="#f5efe8",
             font=("Georgia", 22, "bold")
         ).pack(anchor="w", padx=20, pady=(20, 10))
 
-        tk.Label(
-            self,
-            text=self.get_text("subtitle"),
-            bg="#221a16",
-            fg="#c8b8aa",
-            font=("Arial", 10)
-        ).pack(anchor="w", padx=20, pady=(0, 12))
+        subtitle_key = f"{self.category_key}_subtitle"
+        subtitle_text = self.t(subtitle_key)
+        if subtitle_text != subtitle_key:
+            tk.Label(
+                self,
+                text=subtitle_text,
+                bg="#221a16",
+                fg="#c8b8aa",
+                font=("Arial", 10)
+            ).pack(anchor="w", padx=20, pady=(0, 12))
 
-        for name, price, desc, img_filename in self.process_items():
+        for item in self.items:
+
+            name = self.t(item["name_key"])
+            desc = self.t(item["desc_key"])
+            price = item["price"]
+            img_filename = item["image"]
+
             item_frame = tk.Frame(
                 self,
                 bg="#33261f",
                 highlightbackground="#4a352b",
                 highlightthickness=1
             )
+
             item_frame.pack(fill="x", padx=20, pady=10)
             # ---------- CARD HOVER EFFECT ----------
             # Hover functions
@@ -165,7 +185,7 @@ class MenuCategoryPage(tk.Frame):
 
             add_btn = tk.Button(
                 right_frame,
-                text=self.get_text("add"),
+                text=self.t("add"),
                 bg="#2d7d57",
                 fg="white",
                 activebackground="#379567",
@@ -191,10 +211,5 @@ class MenuCategoryPage(tk.Frame):
                 child.bind("<Enter>", on_card_enter, add="+")
                 child.bind("<Leave>", on_card_leave, add="+")
 
-    def refresh_language(self, new_language):
-        self.language = new_language
-
-        if self.title in ["Starters", "Förrätter"]:
-            self.title = "Förrätter" if new_language == "SV" else "Starters"
-
+    def refresh_language(self, lang):
         self.build_page()
