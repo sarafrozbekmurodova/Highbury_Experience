@@ -3,6 +3,7 @@ from view.main_window import MainWindow
 from controller.main_controller import MainController
 from repository.in_memory_menu_repository import InMemoryMenuRepository
 from repository.in_memory_order_repository import InMemoryOrderRepository
+from service.menu_service import MenuService
 
 
 class App:
@@ -14,10 +15,14 @@ class App:
         self.root.minsize(1200, 700)
         self.root.configure(bg="#201814")
 
+        menu_repository = InMemoryMenuRepository()
+        menu_service = MenuService(menu_repository)
+        order_repository = InMemoryOrderRepository()
+
         self.controller = MainController(
             self.root,
-            InMemoryMenuRepository(),
-            InMemoryOrderRepository()
+            menu_service,
+            order_repository
         )
 
         # Create main window

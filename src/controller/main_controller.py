@@ -4,12 +4,12 @@ from controller.translations import translations
 
 
 class MainController:
-    def __init__(self, root, menu_repository, order_repository):
+    def __init__(self, root, menu_service, order_repository):
         self.root = root
         self.main_window = None
         self.pages = {}
         self.translations = translations
-        self.menu_repository = menu_repository
+        self.menu_service = menu_service
         self.order_repository = order_repository
 
     def t(self, key):
@@ -35,8 +35,8 @@ class MainController:
         starters_page = StartersPage(page_container, self)
         self.register_page("starters", starters_page)
 
-        # Main courses from repository
-        main_items = self.menu_repository.get_main_courses()
+        # Main courses from service
+        main_items = self.menu_service.get_main_courses()
         main_page = MenuCategoryPage(
             page_container,
             self,
@@ -71,7 +71,6 @@ class MainController:
         try:
             order = self.order_repository.get_order()
 
-            # Increase quantity if item already exists
             for item in order:
                 if item["name"] == item_name:
                     item["quantity"] += 1
@@ -116,7 +115,6 @@ class MainController:
         self.refresh_order_panel()
 
     def place_order(self):
-        """Called when user clicks 'Place Order'"""
         order = self.order_repository.get_order()
 
         if not order:

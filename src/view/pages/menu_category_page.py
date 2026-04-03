@@ -1,6 +1,6 @@
 import tkinter as tk
 from PIL import Image, ImageTk
-import os
+
 
 class MenuCategoryPage(tk.Frame):
     def __init__(self, parent, controller, items, category_key):
@@ -12,52 +12,19 @@ class MenuCategoryPage(tk.Frame):
         self.category_key = category_key
         self.images = {}
 
-        default_items = [
-            {
-                "name_key": "grilled_salmon",
-                "desc_key": "grilled_salmon_desc",
-                "price": 189,
-                "image": "grilled_salmon.jpg"
-            },
-            {
-                "name_key": "beef_burger",
-                "desc_key": "beef_burger_desc",
-                "price": 145,
-                "image": "beef_burger.jpg"
-            },
-            {
-                "name_key": "chicken_parmesan",
-                "desc_key": "chicken_parmesan_desc",
-                "price": 165,
-                "image": "chicken_parmesan.jpg"
-            },
-            {
-                "name_key": "vegetable_stir_fry",
-                "desc_key": "vegetable_stir_fry_desc",
-                "price": 135,
-                "image": "vegetable_stir_fry.jpg"
-            },
-            {
-                "name_key": "ribeye_steak",
-                "desc_key": "ribeye_steak_desc",
-                "price": 229,
-                "image": "ribeye_steak.jpg"
-            },
-            {
-                "name_key": "pasta_carbonara",
-                "desc_key": "pasta_carbonara_desc",
-                "price": 155,
-                "image": "pasta_carbonara.jpg"
-            },
-        ]
         if hasattr(controller, "t") and callable(controller.t):
             self.t = controller.t
         else:
             self.t = lambda key: key
+
         self.title_key = category_key
         self.build_page()
-        
-    
+
+    def _get_item_value(self, item, key):
+        if isinstance(item, dict):
+            return item[key]
+        return getattr(item, key)
+
     def build_page(self):
         for widget in self.winfo_children():
             widget.destroy()
@@ -82,11 +49,13 @@ class MenuCategoryPage(tk.Frame):
             ).pack(anchor="w", padx=20, pady=(0, 12))
 
         for item in self.items:
+            name_key = self._get_item_value(item, "name_key")
+            desc_key = self._get_item_value(item, "desc_key")
+            price = self._get_item_value(item, "price")
+            img_filename = self._get_item_value(item, "image")
 
-            name = self.t(item["name_key"])
-            desc = self.t(item["desc_key"])
-            price = item["price"]
-            img_filename = item["image"]
+            name = self.t(name_key)
+            desc = self.t(desc_key)
 
             item_frame = tk.Frame(
                 self,
@@ -94,10 +63,8 @@ class MenuCategoryPage(tk.Frame):
                 highlightbackground="#4a352b",
                 highlightthickness=1
             )
-
             item_frame.pack(fill="x", padx=20, pady=10)
-            # ---------- CARD HOVER EFFECT ----------
-            # Hover functions
+
             def on_card_enter(e, frame=item_frame):
                 frame.config(
                     bg="#3b2d25",
@@ -198,15 +165,16 @@ class MenuCategoryPage(tk.Frame):
                 command=lambda n=name, p=price: self.controller.add_to_order(n, p)
             )
             add_btn.pack()
-            def btn_enter(e):
-                add_btn.config(bg="#379567")
 
-            def btn_leave(e):
-                add_btn.config(bg="#2d7d57")
+            def btn_enter(e, button=add_btn):
+                button.config(bg="#379567")
+
+            def btn_leave(e, button=add_btn):
+                button.config(bg="#2d7d57")
 
             add_btn.bind("<Enter>", btn_enter)
             add_btn.bind("<Leave>", btn_leave)
-            
+
             for child in item_frame.winfo_children():
                 child.bind("<Enter>", on_card_enter, add="+")
                 child.bind("<Leave>", on_card_leave, add="+")
