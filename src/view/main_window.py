@@ -613,10 +613,12 @@ class MainWindow:
             height=2,
             relief="flat",
             bd=0,
-            command=self.controller.place_order,
+            command=self.show_order_confirmation,
             cursor="hand2"
         )
         self.place_order_btn.pack(fill="x", padx=16, pady=(0, 16))
+
+        self.update_place_order_button()
 
     # =========================================================
     # Layout visibility helpers
@@ -806,6 +808,98 @@ class MainWindow:
         ).pack()
 
     # =========================================================
+    # Order confirmation dialog
+    # =========================================================
+    def update_place_order_button(self):
+        if not hasattr(self, "place_order_btn") or self.place_order_btn is None:
+            return
+
+        try:
+            order_items, subtotal = self.controller.order_service.get_order_summary()
+
+            if len(order_items) > 0:
+                self.place_order_btn.config(state="normal")
+            else:
+                self.place_order_btn.config(state="disabled")
+        except Exception as e:
+            print(f"[DEBUG] Error updating button: {e}")
+            self.place_order_btn.config(state="disabled")
+
+    def show_order_confirmation(self):
+        """Ask user to confirm before placing the order."""
+        try:
+            order_items, subtotal = self.controller.order_service.get_order_summary()
+        except Exception as e:
+            print(f"[DEBUG] Could not read order summary: {e}")
+            return
+
+        if len(order_items) == 0:
+            return
+
+        popup = tk.Toplevel(self.root)
+        popup.title("Confirm Order")
+        popup.configure(bg=self.bg_center)
+        popup.geometry("420x240")
+        popup.resizable(False, False)
+        popup.transient(self.root)
+        popup.grab_set()
+
+        tk.Label(
+            popup,
+            text="Confirm your order",
+            bg=self.bg_center,
+            fg=self.text_main,
+            font=("Georgia", 18, "bold")
+        ).pack(pady=(25, 10))
+
+        tk.Label(
+            popup,
+            text="Are you sure you want to place this order?",
+            bg=self.bg_center,
+            fg=self.text_soft,
+            font=("Arial", 11)
+        ).pack(pady=(0, 20))
+
+        button_row = tk.Frame(popup, bg=self.bg_center)
+        button_row.pack(pady=20)
+
+        tk.Button(
+            button_row,
+            text="Cancel",
+            command=popup.destroy,
+            bg=self.red,
+            fg="white",
+            activebackground=self.red_hover,
+            activeforeground="white",
+            relief="flat",
+            bd=0,
+            padx=20,
+            pady=10,
+            font=("Arial", 10, "bold"),
+            cursor="hand2"
+        ).pack(side="left", padx=8)
+
+        def confirm_and_place():
+            popup.destroy()
+            self.controller.place_order()
+
+        tk.Button(
+            button_row,
+            text="Confirm",
+            command=confirm_and_place,
+            bg=self.green,
+            fg="white",
+            activebackground=self.green_hover,
+            activeforeground="white",
+            relief="flat",
+            bd=0,
+            padx=20,
+            pady=10,
+            font=("Arial", 10, "bold"),
+            cursor="hand2"
+        ).pack(side="left", padx=8)
+
+    # =========================================================
     # Order panel updates
     # =========================================================
     def update_order_list(self, order_items, subtotal, total, tip_percentage):
@@ -830,6 +924,7 @@ class MainWindow:
             self.subtotal_label.config(text=f"{t['sub_total']}: 0 kr")
             self.tip_amount_label.config(text=f"{t['tip']}: 0 kr")
             self.total_label.config(text=f"{t['total']}: 0 kr")
+            self.update_place_order_button()
             return
 
         for item in order_items:
@@ -934,6 +1029,7 @@ class MainWindow:
         self.subtotal_label.config(text=f"{t['sub_total']}: {subtotal} kr")
         self.tip_amount_label.config(text=f"{t['tip']}: {tip_amount} kr")
         self.total_label.config(text=f"{t['total']}: {total} kr")
+        self.update_place_order_button()
 
     # =========================================================
     # Confirmation page
