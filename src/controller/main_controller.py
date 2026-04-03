@@ -1,25 +1,67 @@
 # src/controller/main_controller.py
+
 from controller.translations import translations
+
+
 class MainController:
-    def __init__(self, root):
+    def __init__(self, root, menu_repository):
         self.root = root
         self.main_window = None
         self.pages = {}
         self.translations = translations
-        self.order = []   # List of dicts: {'name': str, 'price': int, 'quantity': int}
+        self.menu_repository = menu_repository
 
-        # Tip state
+        self.order = []   # List of dicts: {'name': str, 'price': int, 'quantity': int}
         self.tip_percentage = 0.0
 
     def t(self, key):
         lang = getattr(self.main_window, "current_language", "en")
         return self.main_window.translations.get(lang, {}).get(key, key)
+
     def set_main_window(self, main_window):
         self.main_window = main_window
 
     def register_page(self, name: str, page_frame):
         self.pages[name] = page_frame
         page_frame.grid(row=0, column=0, sticky="nsew")
+
+    def initialize_pages(self, page_container):
+        from view.pages.starters_page import StartersPage
+        from view.pages.menu_category_page import MenuCategoryPage
+        from view.pages.light_courses_page import LightCoursesPage
+        from view.pages.set_meals_page import SetMealsPage
+        from view.pages.desserts_page import DessertsPage
+        from view.pages.drinks_page import DrinksPage
+
+        # Starters
+        starters_page = StartersPage(page_container, self)
+        self.register_page("starters", starters_page)
+
+        # Main courses from repository
+        main_items = self.menu_repository.get_main_courses()
+        main_page = MenuCategoryPage(
+            page_container,
+            self,
+            main_items,
+            "main_courses"
+        )
+        self.register_page("main", main_page)
+
+        # Light Courses
+        light_courses_page = LightCoursesPage(page_container, self)
+        self.register_page("light_courses", light_courses_page)
+
+        # Set Meals
+        set_meals_page = SetMealsPage(page_container, self)
+        self.register_page("set_meals", set_meals_page)
+
+        # Desserts
+        desserts_page = DessertsPage(page_container, self)
+        self.register_page("desserts", desserts_page)
+
+        # Drinks
+        drinks_page = DrinksPage(page_container, self)
+        self.register_page("drinks", drinks_page)
 
     def show_page(self, name: str):
         if name in self.pages:
