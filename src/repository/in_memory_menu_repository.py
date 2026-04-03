@@ -1,17 +1,15 @@
-from repository.menu_repository import MenuRepository
-
-
-class InMemoryMenuRepository(MenuRepository):
-
+class InMemoryMenuRepository:
     def get_main_courses(self):
         return [
             {
+                "item_id": "main_steak",
                 "name_key": "steak",
                 "desc_key": "steak_desc",
                 "price": 189,
                 "image": "steak.jpg"
             },
             {
+                "item_id": "main_burger",
                 "name_key": "burger",
                 "desc_key": "burger_desc",
                 "price": 135,

@@ -20,10 +20,23 @@ class MenuCategoryPage(tk.Frame):
         self.title_key = category_key
         self.build_page()
 
-    def _get_item_value(self, item, key):
+    def _get_item_value(self, item, key, default=None):
         if isinstance(item, dict):
-            return item[key]
-        return getattr(item, key)
+            return item.get(key, default)
+        return getattr(item, key, default)
+
+    def _build_order_item_data(self, item, translated_name, price):
+        item_id = (
+            self._get_item_value(item, "item_id")
+            or self._get_item_value(item, "name_key")
+            or translated_name
+        )
+
+        return {
+            "item_id": item_id,
+            "name": translated_name,
+            "price": price
+        }
 
     def build_page(self):
         for widget in self.winfo_children():
@@ -54,8 +67,10 @@ class MenuCategoryPage(tk.Frame):
             price = self._get_item_value(item, "price")
             img_filename = self._get_item_value(item, "image")
 
-            name = self.t(name_key)
-            desc = self.t(desc_key)
+            name = self.t(name_key) if name_key else self._get_item_value(item, "name", "Unnamed item")
+            desc = self.t(desc_key) if desc_key else self._get_item_value(item, "description", "")
+
+            order_item_data = self._build_order_item_data(item, name, price)
 
             item_frame = tk.Frame(
                 self,
@@ -91,8 +106,9 @@ class MenuCategoryPage(tk.Frame):
                 small = ImageTk.PhotoImage(base_img.resize((120, 90), Image.LANCZOS))
                 large = ImageTk.PhotoImage(base_img.resize((140, 105), Image.LANCZOS))
 
-                self.images[f"{name}_small"] = small
-                self.images[f"{name}_large"] = large
+                image_key_base = order_item_data["item_id"]
+                self.images[f"{image_key_base}_small"] = small
+                self.images[f"{image_key_base}_large"] = large
 
                 img_label = tk.Label(image_wrapper, image=small, bg="#33261f")
                 img_label.pack()
@@ -162,7 +178,7 @@ class MenuCategoryPage(tk.Frame):
                 relief="flat",
                 bd=0,
                 cursor="hand2",
-                command=lambda n=name, p=price: self.controller.add_to_order(n, p)
+                command=lambda data=order_item_data: self.controller.add_to_order(data)
             )
             add_btn.pack()
 

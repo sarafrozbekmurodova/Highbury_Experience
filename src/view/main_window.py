@@ -7,8 +7,7 @@ class MainWindow:
         self.controller = controller
         self.translations = controller.translations
         self.current_language = "EN"
-        # ---------- Language Support ----------
-        
+
         # ---------- State ----------
         self.current_page = "home"
         self.current_sidebar_selection = None
@@ -35,7 +34,7 @@ class MainWindow:
         self.line = "#4a382f"
 
         self.root.configure(bg=self.bg_root)
-        
+
         self.root.option_add("*Button.highlightThickness", 0)
         self.root.option_add("*Button.borderWidth", 0)
         self.root.option_add("*Button.relief", "flat")
@@ -82,24 +81,26 @@ class MainWindow:
 
         self.update_order_list([], 0, 0, 0.0)
         self.show_home()
-        
+
     # ====================== LANGUAGE SWITCH ======================
     def switch_language(self, lang):
         if lang == self.current_language:
             return
+
         self.current_language = lang
         self.build_top()
         self.build_left()
         self.build_hero()
         self.build_right()
         self.build_special_page()
+
         if self.current_page in self.controller.pages:
             page = self.controller.pages[self.current_page]
-            if hasattr(page, 'refresh_language'):
+            if hasattr(page, "refresh_language"):
                 page.refresh_language(lang)
-            else:
-                if hasattr(page, 'build_page'):
-                    page.build_page()
+            elif hasattr(page, "build_page"):
+                page.build_page()
+
         if self.current_page == "home":
             self.build_hero()
 
@@ -112,9 +113,6 @@ class MainWindow:
         self.build_hero()
         self.build_right()
         self.build_special_page()
-        self.order_list()
-        self.order_summary_label()
-        self.place_order()
 
     # =========================================================
     # Top Bar
@@ -124,34 +122,60 @@ class MainWindow:
             widget.destroy()
 
         t = self.translations[self.current_language]
+        self.top_nav_buttons = {}
 
         brand_frame = tk.Frame(self.top_frame, bg=self.bg_top)
         brand_frame.pack(side="left", padx=18)
 
-        tk.Label(brand_frame, text=t["brand"], bg=self.bg_top, fg=self.text_main,
-                 font=("Georgia", 18, "bold")).pack(side="left", pady=14)
+        tk.Label(
+            brand_frame,
+            text=t["brand"],
+            bg=self.bg_top,
+            fg=self.text_main,
+            font=("Georgia", 18, "bold")
+        ).pack(side="left", pady=14)
 
         nav_frame = tk.Frame(self.top_frame, bg=self.bg_top)
         nav_frame.pack(side="left", padx=40)
 
         nav_items = [
-            (t["home"], self.show_home),
-            (t["menu"], lambda: self.navigate_to_page("starters", t["starters"])),
-            (t["todays_special"], self.show_special_page),
-            (t["my_order"], None),
+            ("Home", t["home"], self.show_home),
+            ("Menu", t["menu"], lambda: self.navigate_to_page("starters", t["starters"])),
+            ("Today's Special", t["todays_special"], self.show_special_page),
+            ("My Order", t["my_order"], None),
         ]
 
-        for text, cmd in nav_items:
+        for internal_name, text, cmd in nav_items:
             if cmd:
-                btn = tk.Button(nav_frame, text=text, command=cmd,
-                                bg=self.bg_top, fg=self.text_soft,
-                                activebackground=self.bg_top, activeforeground=self.text_main,
-                                relief="flat", padx=16, pady=10, font=("Arial", 11), cursor="hand2")
+                btn = tk.Button(
+                    nav_frame,
+                    text=text,
+                    command=cmd,
+                    bg=self.bg_top,
+                    fg=self.text_soft,
+                    activebackground=self.bg_top,
+                    activeforeground=self.text_main,
+                    relief="flat",
+                    padx=16,
+                    pady=10,
+                    font=("Arial", 11),
+                    cursor="hand2"
+                )
             else:
-                btn = tk.Button(nav_frame, text=text, state="disabled",
-                                disabledforeground=self.text_muted, bg=self.bg_top,
-                                relief="flat", padx=16, pady=10, font=("Arial", 11))
+                btn = tk.Button(
+                    nav_frame,
+                    text=text,
+                    state="disabled",
+                    disabledforeground=self.text_muted,
+                    bg=self.bg_top,
+                    relief="flat",
+                    padx=16,
+                    pady=10,
+                    font=("Arial", 11)
+                )
+
             btn.pack(side="left", padx=8, pady=10)
+            self.top_nav_buttons[internal_name] = btn
 
         right_top = tk.Frame(self.top_frame, bg=self.bg_top)
         right_top.pack(side="right", padx=18)
@@ -173,20 +197,24 @@ class MainWindow:
         )
         call_btn.pack(side="left", padx=(0, 18), pady=10)
 
-        # Language Buttons
         lang_frame = tk.Frame(right_top, bg=self.bg_top)
         lang_frame.pack(side="left")
 
         for code in ["EN", "SV"]:
             active = (code == self.current_language)
             btn = tk.Button(
-                lang_frame, text=code,
+                lang_frame,
+                text=code,
                 bg=self.gold if active else self.bg_top,
                 fg="#1b140f" if active else self.text_soft,
                 activebackground=self.gold,
                 activeforeground="#1b140f",
-                relief="flat", bd=0, padx=10, pady=6,
-                font=("Arial", 10, "bold"), cursor="hand2",
+                relief="flat",
+                bd=0,
+                padx=10,
+                pady=6,
+                font=("Arial", 10, "bold"),
+                cursor="hand2",
                 command=lambda c=code: self.switch_language(c)
             )
             btn.pack(side="left", padx=3)
@@ -197,10 +225,16 @@ class MainWindow:
     def build_left(self):
         for widget in self.left_frame.winfo_children():
             widget.destroy()
+
         t = self.translations[self.current_language]
 
-        tk.Label(self.left_frame, text=t["menu"], fg=self.text_main, bg=self.bg_sidebar,
-                 font=("Georgia", 18, "bold")).pack(anchor="w", padx=20, pady=(22, 18))
+        tk.Label(
+            self.left_frame,
+            text=t["menu"],
+            fg=self.text_main,
+            bg=self.bg_sidebar,
+            font=("Georgia", 18, "bold")
+        ).pack(anchor="w", padx=20, pady=(22, 18))
 
         categories = [
             (t["starters"], "starters"),
@@ -214,12 +248,21 @@ class MainWindow:
         self.sidebar_buttons = {}
 
         for label, key in categories:
-            btn = tk.Button(self.left_frame, text=label,
-                            bg=self.bg_sidebar, fg=self.text_soft,
-                            activebackground=self.green, activeforeground="white",
-                            relief="flat", anchor="w", padx=18, pady=12,
-                            font=("Arial", 11), cursor="hand2",
-                            command=lambda p=key, s=label: self.navigate_to_page(p, s))
+            btn = tk.Button(
+                self.left_frame,
+                text=label,
+                bg=self.bg_sidebar,
+                fg=self.text_soft,
+                activebackground=self.green,
+                activeforeground="white",
+                relief="flat",
+                anchor="w",
+                padx=18,
+                pady=12,
+                font=("Arial", 11),
+                cursor="hand2",
+                command=lambda p=key, s=label: self.navigate_to_page(p, s)
+            )
             btn.pack(fill="x", padx=14, pady=4)
             self.sidebar_buttons[label] = btn
 
@@ -229,7 +272,9 @@ class MainWindow:
     def build_hero(self):
         for widget in self.hero_frame.winfo_children():
             widget.destroy()
+
         t = self.translations[self.current_language]
+
         outer = tk.Frame(self.hero_frame, bg=self.bg_center)
         outer.pack(fill="both", expand=True, padx=28, pady=28)
 
@@ -281,7 +326,7 @@ class MainWindow:
             pady=14,
             font=("Arial", 12, "bold"),
             cursor="hand2",
-            command=lambda: self.navigate_to_page("starters", "Starters"),
+            command=lambda: self.navigate_to_page("starters", t["starters"]),
             width=18
         ).pack(pady=(0, 14))
 
@@ -308,7 +353,9 @@ class MainWindow:
     def build_special_page(self):
         for widget in self.special_frame.winfo_children():
             widget.destroy()
+
         t = self.translations[self.current_language]
+
         wrapper = tk.Frame(self.special_frame, bg=self.bg_center)
         wrapper.pack(fill="both", expand=True, padx=18, pady=18)
 
@@ -359,9 +406,12 @@ class MainWindow:
 
         tags = tk.Frame(special_card, bg=self.card_bg)
         tags.pack(anchor="w", padx=20, pady=(0, 18))
-        
-        tag_list = ["England", "Kockens Val", "Söndagsklassiker"] if self.current_language == "SV" else \
-                   ["England", "Chef's Choice", "Sunday Classic"]
+
+        tag_list = (
+            ["England", "Kockens Val", "Söndagsklassiker"]
+            if self.current_language == "SV"
+            else ["England", "Chef's Choice", "Sunday Classic"]
+        )
 
         for text in tag_list:
             tk.Label(
@@ -392,7 +442,11 @@ class MainWindow:
             pady=10,
             font=("Arial", 11, "bold"),
             cursor="hand2",
-            command=lambda: self.controller.add_to_order(t["sunday_roast"], 16)
+            command=lambda: self.controller.add_to_order({
+                "item_id": "sunday_roast",
+                "name": t["sunday_roast"],
+                "price": 16
+            })
         ).pack(side="left")
 
         tk.Button(
@@ -419,7 +473,9 @@ class MainWindow:
     def build_right(self):
         for widget in self.right_frame.winfo_children():
             widget.destroy()
+
         t = self.translations[self.current_language]
+
         header = tk.Frame(self.right_frame, bg=self.bg_right)
         header.pack(fill="x", pady=(14, 0))
 
@@ -514,15 +570,12 @@ class MainWindow:
         self.order_list = tk.Frame(self.right_frame, bg=self.bg_right)
         self.order_list.pack(fill="both", expand=True, padx=10, pady=8)
 
-        self.total_label = tk.Label(self.right_frame, text=f"{t['total']}: 0 kr",
-                                    fg=self.gold, bg=self.bg_right, font=("Arial", 14, "bold"))
-        self.total_label.pack(anchor="w", padx=16, pady=(6, 10))
         totals_divider = tk.Frame(self.right_frame, bg=self.line, height=1)
         totals_divider.pack(fill="x", padx=16, pady=(8, 10))
 
         self.subtotal_label = tk.Label(
             self.right_frame,
-            text=t["sub_total"]+": 0 kr",
+            text=t["sub_total"] + ": 0 kr",
             fg=self.text_soft,
             bg=self.bg_right,
             font=("Arial", 11)
@@ -531,7 +584,7 @@ class MainWindow:
 
         self.tip_amount_label = tk.Label(
             self.right_frame,
-            text=t["tip"]+": 0 kr",
+            text=t["tip"] + ": 0 kr",
             fg=self.text_soft,
             bg=self.bg_right,
             font=("Arial", 11)
@@ -540,7 +593,7 @@ class MainWindow:
 
         self.total_label = tk.Label(
             self.right_frame,
-            text=t["total"]+": 0 kr",
+            text=t["total"] + ": 0 kr",
             fg=self.gold,
             bg=self.bg_right,
             font=("Arial", 14, "bold")
@@ -756,6 +809,7 @@ class MainWindow:
     def update_order_list(self, order_items, subtotal, total, tip_percentage):
         for widget in self.order_list.winfo_children():
             widget.destroy()
+
         t = self.translations[self.current_language]
         self.update_tip_buttons(tip_percentage)
 
@@ -771,12 +825,12 @@ class MainWindow:
                 justify="center"
             ).pack(expand=True, pady=80)
 
-            self.subtotal_label.config(text="Subtotal: 0 kr")
-            self.tip_amount_label.config(text="Tip: 0 kr")
-            self.total_label.config(text=t["total"]+": 0 kr")
+            self.subtotal_label.config(text=f"{t['sub_total']}: 0 kr")
+            self.tip_amount_label.config(text=f"{t['tip']}: 0 kr")
+            self.total_label.config(text=f"{t['total']}: 0 kr")
             return
 
-        for i, item in enumerate(order_items):
+        for item in order_items:
             item_frame = tk.Frame(
                 self.order_list,
                 bg=self.card_bg,
@@ -811,7 +865,7 @@ class MainWindow:
                 highlightthickness=0,
                 takefocus=False,
                 cursor="hand2",
-                command=lambda idx=i: self.controller.remove_from_order(idx)
+                command=lambda item_id=item["item_id"]: self.controller.remove_from_order(item_id)
             )
             delete_btn.pack(side="right")
 
@@ -833,7 +887,7 @@ class MainWindow:
                 bd=0,
                 font=("Arial", 12, "bold"),
                 cursor="hand2",
-                command=lambda idx=i: self.controller.change_quantity(idx, -1)
+                command=lambda item_id=item["item_id"]: self.controller.change_quantity(item_id, -1)
             )
             minus_btn.pack(side="left", padx=2)
 
@@ -858,7 +912,7 @@ class MainWindow:
                 bd=0,
                 font=("Arial", 12, "bold"),
                 cursor="hand2",
-                command=lambda idx=i: self.controller.change_quantity(idx, 1)
+                command=lambda item_id=item["item_id"]: self.controller.change_quantity(item_id, 1)
             )
             plus_btn.pack(side="left", padx=2)
 
@@ -872,9 +926,9 @@ class MainWindow:
                 font=("Arial", 11, "bold")
             ).pack(side="right")
 
-        self.subtotal_label.config(text=f"Subtotal: {subtotal} kr")
-        self.tip_amount_label.config(text=f"Tip: {tip_amount} kr")
-        self.total_label.config(text=f"Total: {total} kr")
+        self.subtotal_label.config(text=f"{t['sub_total']}: {subtotal} kr")
+        self.tip_amount_label.config(text=f"{t['tip']}: {tip_amount} kr")
+        self.total_label.config(text=f"{t['total']}: {total} kr")
 
     # =========================================================
     # Confirmation page
@@ -946,4 +1000,5 @@ class MainWindow:
         self.confirmation_page.tkraise()
 
     def go_back_to_menu(self):
-        self.navigate_to_page("starters", "Starters")
+        t = self.translations[self.current_language]
+        self.navigate_to_page("starters", t["starters"])

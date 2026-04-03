@@ -1,6 +1,7 @@
 # src/controller/main_controller.py
 
 from controller.translations import translations
+from service.order_service import OrderService
 
 
 class MainController:
@@ -11,6 +12,7 @@ class MainController:
         self.translations = translations
         self.menu_service = menu_service
         self.order_repository = order_repository
+        self.order_service = OrderService(order_repository)
 
     def t(self, key):
         lang = getattr(self.main_window, "current_language", "en")
@@ -67,45 +69,41 @@ class MainController:
         else:
             print(f"Page '{name}' is not implemented yet.")
 
-    def add_to_order(self, item_name: str, price: int):
+    # -----------------------------
+    # Order Use Case
+    # -----------------------------
+
+    def add_to_order(self, item_data):
+        """
+        item_data is expected to be a dict, for example:
+        {
+            "item_id": "grilled_salmon",
+            "name": "Grilled Salmon",
+            "price": 189
+        }
+
+        Fallbacks are supported in OrderService if item_id is missing.
+        """
         try:
-            order = self.order_repository.get_order()
-
-            for item in order:
-                if item["name"] == item_name:
-                    item["quantity"] += 1
-                    self.refresh_order_panel()
-                    return
-
-            order.append({
-                "name": item_name,
-                "price": price,
-                "quantity": 1
-            })
+            self.order_service.add_item(item_data)
             self.refresh_order_panel()
         except Exception as e:
             print(f"Error adding item: {e}")
 
-    def change_quantity(self, index: int, delta: int):
-        order = self.order_repository.get_order()
-        if 0 <= index < len(order):
-            order[index]["quantity"] += delta
-            if order[index]["quantity"] <= 0:
-                del order[index]
-            self.refresh_order_panel()
+    def change_quantity(self, item_id: str, delta: int):
+        self.order_service.change_quantity(item_id, delta)
+        self.refresh_order_panel()
 
-    def remove_from_order(self, index: int):
-        order = self.order_repository.get_order()
-        if 0 <= index < len(order):
-            del order[index]
-            self.refresh_order_panel()
+    def remove_from_order(self, item_id: str):
+        self.order_service.remove_item(item_id)
+        self.refresh_order_panel()
 
     def get_subtotal(self):
-        order = self.order_repository.get_order()
-        return sum(item["price"] * item["quantity"] for item in order)
+        return self.order_service.get_total()
 
     def get_tip_amount(self):
-        return round(self.get_subtotal() * self.order_repository.get_tip_percentage())
+        subtotal = self.get_subtotal()
+        return round(subtotal * self.order_repository.get_tip_percentage())
 
     def get_total(self):
         return self.get_subtotal() + self.get_tip_amount()
@@ -115,34 +113,36 @@ class MainController:
         self.refresh_order_panel()
 
     def place_order(self):
-        order = self.order_repository.get_order()
-
-        if not order:
+        if self.order_service.is_empty():
             print("Order is empty!")
             return
 
-        subtotal = self.get_subtotal()
+        order_items, subtotal = self.order_service.place_order()
         total = self.get_total()
         tip_percentage = self.order_repository.get_tip_percentage()
 
         print(f"Order placed! Subtotal: {subtotal} kr, Total: {total} kr")
-        print("Items:", order)
+        print("Items:", order_items)
 
-        self.main_window.show_confirmation_page(
-            order,
-            subtotal,
-            total,
-            tip_percentage
-        )
+        if self.main_window:
+            self.main_window.show_confirmation_page(
+                order_items,
+                subtotal,
+                total,
+                tip_percentage
+            )
 
-        self.order_repository.clear_order()
+        self.order_service.clear_order()
         self.refresh_order_panel()
 
     def refresh_order_panel(self):
         if self.main_window:
+            order_items, subtotal = self.order_service.get_order_summary()
+            total = subtotal + round(subtotal * self.order_repository.get_tip_percentage())
+
             self.main_window.update_order_list(
-                self.order_repository.get_order(),
-                self.get_subtotal(),
-                self.get_total(),
+                order_items,
+                subtotal,
+                total,
                 self.order_repository.get_tip_percentage()
             )
