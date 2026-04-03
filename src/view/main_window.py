@@ -283,6 +283,7 @@ class MainWindow:
                             font=("Arial", 11), cursor="hand2",
                             command=lambda p=key, s=label: self.navigate_to_page(p, s))
             btn.pack(fill="x", padx=14, pady=4)
+            self.sidebar_buttons[label] = btn
 
     # =========================================================
     # Home / Start Screen
