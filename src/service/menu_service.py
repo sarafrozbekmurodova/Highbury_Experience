@@ -17,3 +17,15 @@ class MenuService:
             )
             for item in raw_items
         ]
+    
+    def get_item_by_id(self, item_id: str):
+        raw_item = self.menu_repository.get_by_id(item_id)
+        if not raw_item:
+            return None
+
+        return MenuItem(
+            name_key=raw_item["name_key"],
+            desc_key=raw_item["desc_key"],
+            price=raw_item["price"],
+            image=raw_item["image"]
+        )

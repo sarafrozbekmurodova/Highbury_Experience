@@ -1,0 +1,26 @@
+{
+  "background": {
+    "root": "#ffffff",
+    "main": "#f0f0f0"
+  },
+  "text": {
+    "main": "#000000"
+  },
+
+  "button": {
+    "primary": {
+      "bg": "#2d7d57",
+      "fg": "#ffffff",
+      "hover_bg": "#379567",
+      "border": "#2d7d57"
+    }
+  },
+
+  "button_sizes": {
+    "md": {
+      "padx": 12,
+      "pady": 6,
+      "font_size": 12
+    }
+  }
+}

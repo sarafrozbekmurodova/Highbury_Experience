@@ -25,3 +25,11 @@ class InMemoryMenuRepository:
 
     def get_drinks(self):
         return []
+
+    def get_all(self):
+        return (
+            self.get_main_courses()
+            + self.get_starters()
+            + self.get_desserts()
+            + self.get_drinks()
+        )
