@@ -32,8 +32,11 @@ class MenuCategoryPage(tk.Frame):
             or translated_name
         )
 
+        name_key = self._get_item_value(item, "name_key")
+
         return {
             "item_id": item_id,
+            "name_key": name_key,
             "name": translated_name,
             "price": price
         }
@@ -178,11 +181,7 @@ class MenuCategoryPage(tk.Frame):
                 relief="flat",
                 bd=0,
                 cursor="hand2",
-                command=lambda item=item, name=name, price=price: self.controller.add_to_order({
-                    "item_id": item["name_key"],
-                    "name": name,
-                    "price": price
-                })
+                command=lambda data=order_item_data: self.controller.add_to_order(data)
             )
             add_btn.pack()
 
@@ -199,5 +198,5 @@ class MenuCategoryPage(tk.Frame):
                 child.bind("<Enter>", on_card_enter, add="+")
                 child.bind("<Leave>", on_card_leave, add="+")
 
-    def refresh_language(self, lang):
+    def refresh_language(self, lang=None):
         self.build_page()
