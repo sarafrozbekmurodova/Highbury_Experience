@@ -1,6 +1,4 @@
 class MenuRepository:
-    """Abstract menu repository (interface-like)"""
-
     def get_main_courses(self):
         raise NotImplementedError
 
