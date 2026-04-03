@@ -6,7 +6,7 @@ class MainWindow:
         self.root = root
         self.controller = controller
         self.translations = controller.translations
-        self.current_language = "en"
+        self.current_language = "EN"
         # ---------- Language Support ----------
         
         # ---------- State ----------
