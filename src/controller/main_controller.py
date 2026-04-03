@@ -8,6 +8,7 @@ class MainController:
     def __init__(self, root, menu_service, order_repository):
         self.root = root
         self.main_window = None
+        self.order_items = []
         self.pages = {}
         self.translations = translations
         self.menu_service = menu_service
@@ -74,21 +75,8 @@ class MainController:
     # -----------------------------
 
     def add_to_order(self, item_data):
-        """
-        item_data is expected to be a dict, for example:
-        {
-            "item_id": "grilled_salmon",
-            "name": "Grilled Salmon",
-            "price": 189
-        }
-
-        Fallbacks are supported in OrderService if item_id is missing.
-        """
-        try:
-            self.order_service.add_item(item_data)
-            self.refresh_order_panel()
-        except Exception as e:
-            print(f"Error adding item: {e}")
+        self.order_service.add_item(item_data)
+        self.refresh_order_panel()
 
     def change_quantity(self, item_id: str, delta: int):
         self.order_service.change_quantity(item_id, delta)
