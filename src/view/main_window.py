@@ -1,5 +1,6 @@
 import tkinter as tk
 from view.components.order_panel import OrderPanel
+from view.components.menu_panel import Sidebar
 
 
 class MainWindow:
@@ -49,14 +50,14 @@ class MainWindow:
         self.body_frame = tk.Frame(self.root, bg=self.bg_main)
         self.body_frame.pack(side="top", fill="both", expand=True)
 
-        self.left_frame = tk.Frame(self.body_frame, width=210, bg=self.bg_sidebar)
-        self.left_frame.pack(side="left", fill="y")
-        self.left_frame.pack_propagate(False)
+        # Left panel is now its own component
+        self.sidebar = Sidebar(self.body_frame, self, controller)
+        self.left_frame = self.sidebar.frame
 
         self.center_frame = tk.Frame(self.body_frame, bg=self.bg_center)
         self.center_frame.pack(side="left", fill="both", expand=True)
 
-        # Right panel is now its own component
+        # Right panel is already its own component
         self.order_panel = OrderPanel(self.body_frame, self, controller)
         self.right_frame = self.order_panel.frame
 
@@ -72,10 +73,8 @@ class MainWindow:
         self.special_page = None
 
         self.top_nav_buttons = {}
-        self.sidebar_buttons = {}
 
         self.build_top()
-        self.build_left()
         self.build_hero()
 
         self.update_order_list([], 0, 0, 0.0)
@@ -88,7 +87,7 @@ class MainWindow:
 
         self.current_language = lang
         self.build_top()
-        self.build_left()
+        self.sidebar.build()
         self.build_hero()
         self.order_panel.build()
         self.build_special_page()
@@ -110,7 +109,7 @@ class MainWindow:
 
     def refresh_ui(self):
         self.build_top()
-        self.build_left()
+        self.sidebar.build()
         self.build_hero()
         self.order_panel.build()
         self.build_special_page()
@@ -219,53 +218,6 @@ class MainWindow:
                 command=lambda c=code: self.switch_language(c)
             )
             btn.pack(side="left", padx=3)
-
-    # =========================================================
-    # Left Sidebar
-    # =========================================================
-    def build_left(self):
-        for widget in self.left_frame.winfo_children():
-            widget.destroy()
-
-        t = self.translations[self.current_language]
-
-        tk.Label(
-            self.left_frame,
-            text=t["menu"],
-            fg=self.text_main,
-            bg=self.bg_sidebar,
-            font=("Georgia", 18, "bold")
-        ).pack(anchor="w", padx=20, pady=(22, 18))
-
-        categories = [
-            (t["starters"], "starters"),
-            (t["light_courses"], "light_courses"),
-            (t["main_courses"], "main"),
-            (t["set_meals"], "set_meals"),
-            (t["desserts"], "desserts"),
-            (t["beverages"], "drinks"),
-        ]
-
-        self.sidebar_buttons = {}
-
-        for label, key in categories:
-            btn = tk.Button(
-                self.left_frame,
-                text=label,
-                bg=self.bg_sidebar,
-                fg=self.text_soft,
-                activebackground=self.green,
-                activeforeground="white",
-                relief="flat",
-                anchor="w",
-                padx=18,
-                pady=12,
-                font=("Arial", 11),
-                cursor="hand2",
-                command=lambda p=key, s=label: self.navigate_to_page(p, s)
-            )
-            btn.pack(fill="x", padx=14, pady=4)
-            self.sidebar_buttons[label] = btn
 
     # =========================================================
     # Home / Start Screen
@@ -551,23 +503,7 @@ class MainWindow:
         page_frame.tkraise()
 
     def update_sidebar_highlight(self):
-        for label, btn in self.sidebar_buttons.items():
-            if label == self.current_sidebar_selection:
-                btn.config(
-                    bg=self.green,
-                    fg="white",
-                    activebackground=self.green_hover,
-                    activeforeground="white",
-                    font=("Arial", 11, "bold")
-                )
-            else:
-                btn.config(
-                    bg=self.bg_sidebar,
-                    fg=self.text_soft,
-                    activebackground=self.green,
-                    activeforeground="white",
-                    font=("Arial", 11)
-                )
+        self.sidebar.update_highlight(self.current_sidebar_selection)
 
     def update_top_nav_highlight(self, active_name):
         for label, btn in self.top_nav_buttons.items():
