@@ -75,49 +75,8 @@ class MainController:
     # -----------------------------
 
     def add_to_order(self, item_data):
-        """
-        item_data is expected to be a dict, for example:
-        {
-            "item_id": "grilled_salmon",
-            "name": "Grilled Salmon",
-            "price": 189
-        }
-
-        Fallbacks are supported in OrderService if item_id is missing.
-        """
-        if isinstance(item_data, dict):
-            name = item_data.get("name")
-            price = item_data.get("price")
-        else:
-            name = item_data
-            price = 0
-
-        if not hasattr(self, 'order_items'):
-            self.order_items = []
-
-        existing = next((item for item in self.order_items if item["name"] == name), None)
-        if existing:
-            existing["quantity"] += 1
-        else:
-            self.order_items.append({
-                "item_id": name.lower().replace(" ", "_"),
-                "name": name,
-                "price": price,
-                "quantity": 1
-            })
-
-        self.subtotal = sum(item["price"] * item["quantity"] for item in self.order_items)
-        self.total = self.subtotal + getattr(self, 'tip_amount', 0)
-        self.tip_percentage = getattr(self, 'tip_percentage', 0.0)
-
-        if hasattr(self, 'main_window'):
-            self.main_window.update_order_list(
-                self.order_items,
-                self.subtotal,
-                self.total,
-                self.tip_percentage
-            )
-            self.main_window.update_place_order_button()
+        self.order_service.add_item(item_data)
+        self.refresh_order_panel()
 
     def change_quantity(self, item_id: str, delta: int):
         self.order_service.change_quantity(item_id, delta)

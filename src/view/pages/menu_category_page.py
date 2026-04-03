@@ -178,7 +178,11 @@ class MenuCategoryPage(tk.Frame):
                 relief="flat",
                 bd=0,
                 cursor="hand2",
-                command=lambda data=order_item_data: self.controller.add_to_order(data)
+                command=lambda item=item, name=name, price=price: self.controller.add_to_order({
+                    "item_id": item["name_key"],
+                    "name": name,
+                    "price": price
+                })
             )
             add_btn.pack()
 
