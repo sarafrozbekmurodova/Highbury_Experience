@@ -8,6 +8,7 @@ class MainController:
     def __init__(self, root, menu_service, order_repository):
         self.root = root
         self.main_window = None
+        self.order_items = []
         self.pages = {}
         self.translations = translations
         self.menu_service = menu_service
@@ -84,11 +85,39 @@ class MainController:
 
         Fallbacks are supported in OrderService if item_id is missing.
         """
-        try:
-            self.order_service.add_item(item_data)
-            self.refresh_order_panel()
-        except Exception as e:
-            print(f"Error adding item: {e}")
+        if isinstance(item_data, dict):
+            name = item_data.get("name")
+            price = item_data.get("price")
+        else:
+            name = item_data
+            price = 0
+
+        if not hasattr(self, 'order_items'):
+            self.order_items = []
+
+        existing = next((item for item in self.order_items if item["name"] == name), None)
+        if existing:
+            existing["quantity"] += 1
+        else:
+            self.order_items.append({
+                "item_id": name.lower().replace(" ", "_"),
+                "name": name,
+                "price": price,
+                "quantity": 1
+            })
+
+        self.subtotal = sum(item["price"] * item["quantity"] for item in self.order_items)
+        self.total = self.subtotal + getattr(self, 'tip_amount', 0)
+        self.tip_percentage = getattr(self, 'tip_percentage', 0.0)
+
+        if hasattr(self, 'main_window'):
+            self.main_window.update_order_list(
+                self.order_items,
+                self.subtotal,
+                self.total,
+                self.tip_percentage
+            )
+            self.main_window.update_place_order_button()
 
     def change_quantity(self, item_id: str, delta: int):
         self.order_service.change_quantity(item_id, delta)
