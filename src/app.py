@@ -2,6 +2,7 @@ import tkinter as tk
 from view.main_window import MainWindow
 from controller.main_controller import MainController
 from repository.in_memory_menu_repository import InMemoryMenuRepository
+from repository.in_memory_order_repository import InMemoryOrderRepository
 
 
 class App:
@@ -13,7 +14,11 @@ class App:
         self.root.minsize(1200, 700)
         self.root.configure(bg="#201814")
 
-        self.controller = MainController(self.root, InMemoryMenuRepository())
+        self.controller = MainController(
+            self.root,
+            InMemoryMenuRepository(),
+            InMemoryOrderRepository()
+        )
 
         # Create main window
         self.main_window = MainWindow(self.root, self.controller)

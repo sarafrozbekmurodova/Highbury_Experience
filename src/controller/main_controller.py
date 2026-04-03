@@ -4,15 +4,13 @@ from controller.translations import translations
 
 
 class MainController:
-    def __init__(self, root, menu_repository):
+    def __init__(self, root, menu_repository, order_repository):
         self.root = root
         self.main_window = None
         self.pages = {}
         self.translations = translations
         self.menu_repository = menu_repository
-
-        self.order = []   # List of dicts: {'name': str, 'price': int, 'quantity': int}
-        self.tip_percentage = 0.0
+        self.order_repository = order_repository
 
     def t(self, key):
         lang = getattr(self.main_window, "current_language", "en")
@@ -71,14 +69,16 @@ class MainController:
 
     def add_to_order(self, item_name: str, price: int):
         try:
+            order = self.order_repository.get_order()
+
             # Increase quantity if item already exists
-            for item in self.order:
+            for item in order:
                 if item["name"] == item_name:
                     item["quantity"] += 1
                     self.refresh_order_panel()
                     return
 
-            self.order.append({
+            order.append({
                 "name": item_name,
                 "price": price,
                 "quantity": 1
@@ -88,58 +88,63 @@ class MainController:
             print(f"Error adding item: {e}")
 
     def change_quantity(self, index: int, delta: int):
-        if 0 <= index < len(self.order):
-            self.order[index]["quantity"] += delta
-            if self.order[index]["quantity"] <= 0:
-                del self.order[index]
+        order = self.order_repository.get_order()
+        if 0 <= index < len(order):
+            order[index]["quantity"] += delta
+            if order[index]["quantity"] <= 0:
+                del order[index]
             self.refresh_order_panel()
 
     def remove_from_order(self, index: int):
-        if 0 <= index < len(self.order):
-            del self.order[index]
+        order = self.order_repository.get_order()
+        if 0 <= index < len(order):
+            del order[index]
             self.refresh_order_panel()
 
     def get_subtotal(self):
-        return sum(item["price"] * item["quantity"] for item in self.order)
+        order = self.order_repository.get_order()
+        return sum(item["price"] * item["quantity"] for item in order)
 
     def get_tip_amount(self):
-        return round(self.get_subtotal() * self.tip_percentage)
+        return round(self.get_subtotal() * self.order_repository.get_tip_percentage())
 
     def get_total(self):
         return self.get_subtotal() + self.get_tip_amount()
 
     def set_tip_percentage(self, tip_percentage: float):
-        self.tip_percentage = tip_percentage
+        self.order_repository.set_tip_percentage(tip_percentage)
         self.refresh_order_panel()
 
     def place_order(self):
         """Called when user clicks 'Place Order'"""
-        if not self.order:
+        order = self.order_repository.get_order()
+
+        if not order:
             print("Order is empty!")
             return
 
         subtotal = self.get_subtotal()
         total = self.get_total()
+        tip_percentage = self.order_repository.get_tip_percentage()
 
         print(f"Order placed! Subtotal: {subtotal} kr, Total: {total} kr")
-        print("Items:", self.order)
+        print("Items:", order)
 
         self.main_window.show_confirmation_page(
-            self.order,
+            order,
             subtotal,
             total,
-            self.tip_percentage
+            tip_percentage
         )
 
-        self.order.clear()
-        self.tip_percentage = 0.0
+        self.order_repository.clear_order()
         self.refresh_order_panel()
 
     def refresh_order_panel(self):
         if self.main_window:
             self.main_window.update_order_list(
-                self.order,
+                self.order_repository.get_order(),
                 self.get_subtotal(),
                 self.get_total(),
-                self.tip_percentage
+                self.order_repository.get_tip_percentage()
             )
