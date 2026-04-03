@@ -210,5 +210,68 @@ translations = {
         "house_white_wine_desc": "Glas Chardonnay",
         "craft_beer": "Hantverksöl",
         "craft_beer_desc": "Lokal IPA"
-    }
+    },
+
+"DE": {
+    "brand": "♛ Krone & Fass",
+    "menu": "Menü",
+    "light_courses": "Leichte Gerichte",
+    "main_courses": "Hauptgerichte",
+    "set_meals": "Menüs",
+    "desserts": "Desserts",
+    "beverages": "Getränke",
+    "home": "Start",
+    "todays_special": "Heutiges Special",
+    "my_order": "Meine Bestellung",
+    "call_service": "Service rufen",
+    "order_summary": "Bestellübersicht",
+    "single_order": "Einzelbestellung",
+    "group_order": "Gruppenbestellung",
+    "total": "Gesamt",
+    "sub_total": "Zwischensumme",
+    "tip": "Trinkgeld",
+    "place_order": "Bestellen",
+    "empty_order": "Ihre Bestellung ist leer.\nBitte wählen Sie etwas aus dem Menü.",
+    "welcome": "Willkommen bei Krone & Fass",
+    "tagline": "Traditionelle britische Pubküche · Seit 1887",
+    "sunday_roast": "Sonntagsbraten ✩",
+    "sunday_roast_desc": "Langsam gebratenes Rindfleisch mit Yorkshire-Pudding, Kartoffeln, Gemüse und Bratensauce",
+    "add_to_order": "+ Zur Bestellung hinzufügen",
+    "back_to_home": "Zurück zum Start",
+    "start_order": "Bestellung starten",
+    "menu_subtitle": "Wählen Sie aus unserem Angebot und fügen Sie Gerichte hinzu.",
+    "add": "Hinzufügen",
+
+    # Page titles
+    "starters": "Vorspeisen",
+    "light_courses": "Leichte Gerichte",
+    "set_meals": "Menüs",
+    "desserts": "Desserts",
+    "drinks": "Getränke",
+
+    # Page subtitles
+    "starters_subtitle": "Beginnen Sie mit unseren Vorspeisen",
+    "light_courses_subtitle": "Leichte Optionen für jeden Geschmack",
+    "set_meals_subtitle": "Kombinationsmenüs für alle",
+    "desserts_subtitle": "Süße Leckereien zum Abschluss",
+    "drinks_subtitle": "Getränke zu Ihren Speisen",
+
+    # Starters items
+    "starter_bruschetta": "Bruschetta",
+    "starter_bruschetta_desc": "Geröstetes Brot mit Tomaten, Knoblauch & Basilikum",
+    "starter_caesar": "Caesar Salat",
+    "starter_caesar_desc": "Römersalat, Parmesan, Croutons & Dressing",
+    "starter_garlic": "Knoblauchbrot",
+    "starter_garlic_desc": "Geröstetes Brot mit Knoblauchbutter",
+    "starter_soup": "Tagessuppe",
+    "starter_soup_desc": "Täglich frisch vom Chef",
+    "starter_calamari": "Calamari",
+    "starter_calamari_desc": "Frittierte Tintenfischringe mit Dip",
+
+    # Drinks example
+    "espresso": "Espresso",
+    "espresso_desc": "Frisch gebrühter Espresso",
+    "cappuccino": "Cappuccino",
+    "cappuccino_desc": "Mit Milchschaum",
+}    
 }

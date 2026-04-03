@@ -200,7 +200,7 @@ class MainWindow:
         lang_frame = tk.Frame(right_top, bg=self.bg_top)
         lang_frame.pack(side="left")
 
-        for code in ["EN", "SV"]:
+        for code in ["EN", "SV", "DE"]:
             active = (code == self.current_language)
             btn = tk.Button(
                 lang_frame,
