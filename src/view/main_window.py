@@ -681,5 +681,4 @@ class MainWindow:
         The method currently navigates back to the starters page and restores the
         corresponding sidebar selection in the active language.
         """
-        t = self.translations[self.current_language]
-        self.navigate_to_page("starters", t["starters"])
+        self.navigate_to_page("starters", "starters")
