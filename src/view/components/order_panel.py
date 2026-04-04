@@ -2,7 +2,31 @@ import tkinter as tk
 
 
 class OrderPanel:
+    """
+    Order summary panel component.
+
+    The name "OrderPanel" reflects its role as the right-hand panel that shows
+    the current order, subtotal, tip, total, and order-related actions.
+
+    Responsibilities:
+    - render the current order summary,
+    - display subtotal, tip, and total,
+    - provide tip-selection controls,
+    - enable quantity changes and item removal,
+    - manage the place-order action and confirmation popup.
+
+    The OrderPanel is a view component. It displays order state and delegates
+    order actions to the controller.
+    """
+
     def __init__(self, parent, main_window, controller):
+        """
+        Initialize the order panel component.
+
+        :param parent: Parent Tk container in which the panel is placed
+        :param main_window: Reference to the MainWindow instance for styling and UI state
+        :param controller: Main controller handling order-related actions
+        """
         self.parent = parent
         self.main_window = main_window
         self.controller = controller
@@ -25,6 +49,17 @@ class OrderPanel:
         self.build()
 
     def build(self):
+        """
+        Build or rebuild the full order panel UI.
+
+        This method:
+        - clears previous widgets,
+        - rebuilds the summary header,
+        - creates order mode and tip controls,
+        - creates totals labels,
+        - creates the place-order button,
+        - updates button state based on current order contents.
+        """
         for widget in self.frame.winfo_children():
             widget.destroy()
 
@@ -174,10 +209,20 @@ class OrderPanel:
         self.update_place_order_button()
 
     def set_tip_mode(self, tip_percentage):
+        """
+        Set the active tip percentage and refresh tip button highlighting.
+
+        :param tip_percentage: Tip percentage as a decimal value
+        """
         self.controller.set_tip_percentage(tip_percentage)
         self.update_tip_buttons(tip_percentage)
 
     def update_tip_buttons(self, active_tip_percentage):
+        """
+        Update the visual state of the tip selection buttons.
+
+        :param active_tip_percentage: Currently selected tip percentage
+        """
         for tip_value, btn in self.tip_buttons.items():
             if tip_value == active_tip_percentage:
                 btn.config(
@@ -197,6 +242,9 @@ class OrderPanel:
                 )
 
     def update_place_order_button(self):
+        """
+        Enable or disable the place-order button depending on whether the order is empty.
+        """
         if self.place_order_btn is None:
             return
 
@@ -224,6 +272,11 @@ class OrderPanel:
             )
 
     def show_order_confirmation(self):
+        """
+        Show a confirmation popup before placing the order.
+
+        If the user confirms, the controller is asked to place the order.
+        """
         try:
             order_items, subtotal = self.controller.order_service.get_order_summary()
         except Exception as e:
@@ -297,6 +350,14 @@ class OrderPanel:
         ).pack(side="left", padx=8)
 
     def update_order_list(self, order_items, subtotal, total, tip_percentage):
+        """
+        Rebuild the visible order list and totals.
+
+        :param order_items: Current ordered items
+        :param subtotal: Order subtotal before tip
+        :param total: Order total including tip
+        :param tip_percentage: Active tip percentage
+        """
         for widget in self.order_list.winfo_children():
             widget.destroy()
 
