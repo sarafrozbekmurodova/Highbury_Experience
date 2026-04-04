@@ -70,8 +70,7 @@ class TopPanel:
             ("Home", t["home"], self.main_window.show_home),
             ("Menu", t["menu"], lambda: self.main_window.navigate_to_page("starters", "starters")),
             ("Today's Special", t["todays_special"], self.main_window.show_special_page),
-            ("My Order", t["my_order"], None),
-        ]
+            ]
 
         for internal_name, text, cmd in nav_items:
             if cmd:
