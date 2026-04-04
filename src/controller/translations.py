@@ -3,7 +3,7 @@ translations = {
     "EN": {
         "brand": "♛ The Crown & Barrel",
         "menu": "Menu",
-        "light_courses": "Light Courses",
+        "light_courses": "Light Courses",        
         "main_courses": "Main Courses",
         "set_meals": "Set Meals",
         "desserts": "Desserts",
@@ -32,9 +32,6 @@ translations = {
 
         # Page titles
         "starters": "Starters",
-        "light_courses": "Light Courses",
-        "set_meals": "Set Meals",
-        "desserts": "Desserts",
         "drinks": "Drinks",
 
         # Page subtitles
@@ -139,9 +136,6 @@ translations = {
 
         # Page titles
         "starters": "Förrätter",
-        "light_courses": "Lätta rätter",
-        "set_meals": "Måltidspaket",
-        "desserts": "Efterrätter",
         "drinks": "Drycker",
 
         # Page subtitles
@@ -243,10 +237,7 @@ translations = {
     "add": "Hinzufügen",
 
     # Page titles
-    "starters": "Vorspeisen",
-    "light_courses": "Leichte Gerichte",
-    "set_meals": "Menüs",
-    "desserts": "Desserts",
+    "starters": "Vorspeisen",    
     "drinks": "Getränke",
 
     # Page subtitles
