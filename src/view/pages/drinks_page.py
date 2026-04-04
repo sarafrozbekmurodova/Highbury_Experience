@@ -1,8 +1,24 @@
+"""
+Drinks page implementation.
+
+Defines the drink menu items and delegates rendering to MenuCategoryPage.
+"""
+
 from view.pages.menu_category_page import MenuCategoryPage
 
 
 class DrinksPage(MenuCategoryPage):
+    """
+    Page representing the drinks category.
+
+    This class provides drink item data and relies on MenuCategoryPage
+    for rendering and interaction logic.
+    """
+
     def __init__(self, parent, controller):
+        """
+        Initialize the drinks page with predefined drink items.
+        """
         drink_items = [
             {
                 "item_id": "drink_espresso",
