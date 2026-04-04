@@ -11,7 +11,6 @@ class OrderPanel:
     Responsibilities:
     - render the current order summary,
     - display subtotal, tip, and total,
-    - provide tip-selection controls,
     - enable quantity changes and item removal,
     - manage the place-order action and confirmation popup.
 
@@ -55,7 +54,7 @@ class OrderPanel:
         This method:
         - clears previous widgets,
         - rebuilds the summary header,
-        - creates order mode and tip controls,
+        - creates the order list area,
         - creates totals labels,
         - creates the place-order button,
         - updates button state based on current order contents.
@@ -64,6 +63,7 @@ class OrderPanel:
             widget.destroy()
 
         t = self.main_window.translations[self.main_window.current_language]
+        self.tip_buttons = {}
 
         header = tk.Frame(self.frame, bg=self.main_window.bg_right)
         header.pack(fill="x", pady=(14, 0))
@@ -76,85 +76,8 @@ class OrderPanel:
             font=("Georgia", 18, "bold")
         ).pack(side="left", padx=16)
 
-        mode_frame = tk.Frame(self.frame, bg=self.main_window.bg_right)
-        mode_frame.pack(fill="x", padx=16, pady=(10, 10))
-
-        tk.Button(
-            mode_frame,
-            text=t["single_order"],
-            bg=self.main_window.green,
-            fg="white",
-            activebackground=self.main_window.green_hover,
-            activeforeground="white",
-            relief="flat",
-            bd=0,
-            highlightthickness=0,
-            takefocus=False,
-            padx=12,
-            pady=6,
-            font=("Arial", 10, "bold"),
-            cursor="hand2"
-        ).pack(side="left", padx=(0, 8))
-
-        tk.Button(
-            mode_frame,
-            text=t["group_order"],
-            state="disabled",
-            disabledforeground=self.main_window.text_muted,
-            bg=self.main_window.bg_right,
-            relief="flat",
-            bd=0,
-            highlightthickness=0,
-            takefocus=False,
-            padx=12,
-            pady=6,
-            font=("Arial", 10)
-        ).pack(side="left")
-
-        tip_frame = tk.Frame(self.frame, bg=self.main_window.bg_right)
-        tip_frame.pack(fill="x", padx=16, pady=(0, 10))
-
-        no_tip_btn = tk.Button(
-            tip_frame,
-            text=t["no_tip"],
-            bg=self.main_window.green,
-            fg="white",
-            activebackground=self.main_window.green_hover,
-            activeforeground="white",
-            relief="flat",
-            bd=0,
-            padx=12,
-            pady=6,
-            font=("Arial", 10, "bold"),
-            cursor="hand2",
-            command=lambda: self.set_tip_mode(0.0)
-        )
-        no_tip_btn.pack(side="left", padx=(0, 8))
-
-        ten_tip_btn = tk.Button(
-            tip_frame,
-            text=t["ten_percent_tip"],
-            bg=self.main_window.bg_right,
-            fg=self.main_window.text_soft,
-            activebackground=self.main_window.green,
-            activeforeground="white",
-            relief="flat",
-            bd=0,
-            padx=12,
-            pady=6,
-            font=("Arial", 10),
-            cursor="hand2",
-            command=lambda: self.set_tip_mode(0.10)
-        )
-        ten_tip_btn.pack(side="left")
-
-        self.tip_buttons = {
-            0.0: no_tip_btn,
-            0.10: ten_tip_btn
-        }
-
         divider = tk.Frame(self.frame, bg=self.main_window.line, height=1)
-        divider.pack(fill="x", padx=0, pady=(4, 8))
+        divider.pack(fill="x", padx=0, pady=(10, 8))
 
         self.order_list = tk.Frame(self.frame, bg=self.main_window.bg_right)
         self.order_list.pack(fill="both", expand=True, padx=10, pady=8)
@@ -210,9 +133,10 @@ class OrderPanel:
 
     def set_tip_mode(self, tip_percentage):
         """
-        Set the active tip percentage and refresh tip button highlighting.
+        Set the active tip percentage.
 
-        :param tip_percentage: Tip percentage as a decimal value
+        Tip buttons have been removed from the UI, but this method is kept
+        to avoid breaking controller/view interactions if still called elsewhere.
         """
         self.controller.set_tip_percentage(tip_percentage)
         self.update_tip_buttons(tip_percentage)
@@ -221,8 +145,12 @@ class OrderPanel:
         """
         Update the visual state of the tip selection buttons.
 
-        :param active_tip_percentage: Currently selected tip percentage
+        Tip buttons are currently not shown in the UI, so this method returns
+        immediately when no tip buttons exist.
         """
+        if not self.tip_buttons:
+            return
+
         for tip_value, btn in self.tip_buttons.items():
             if tip_value == active_tip_percentage:
                 btn.config(
