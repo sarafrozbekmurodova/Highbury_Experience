@@ -3,8 +3,44 @@ from view.components.order_panel import OrderPanel
 from view.components.menu_panel import Sidebar
 from view.components.top_panel import TopPanel
 from view.components.hero_panel import HeroPanel
+
+
 class MainWindow:
+    """
+    MainWindow represents the primary user interface container for the restaurant menu system.
+
+    This class is responsible for:
+    - creating and coordinating the main UI layout,
+    - managing the top panel, sidebar, hero panel, center content area, and order panel,
+    - handling language switching across the active session,
+    - controlling page visibility and navigation state,
+    - delegating order-related visual updates to the order panel,
+    - displaying special pages such as Today's Special and order confirmation.
+
+    The class acts as the main view-level coordinator in the application's MVC-inspired structure.
+    It does not contain the core business logic itself, but collaborates with the controller to
+    update the interface based on user actions and application state.
+    """
+
     def __init__(self, root, controller):
+        """
+        Initialize the main window and all major UI containers.
+
+        Parameters:
+            root: The Tk root window of the application.
+            controller: The main controller responsible for coordinating application logic,
+                        page navigation, translations, and order actions.
+
+        This constructor:
+        - stores shared references,
+        - initializes view state,
+        - defines the color palette,
+        - configures global button styling,
+        - creates the main layout and reusable UI components,
+        - builds the initial top and hero panels,
+        - initializes the order panel,
+        - displays the home screen.
+        """
         self.root = root
         self.controller = controller
         self.translations = controller.translations
@@ -62,7 +98,7 @@ class MainWindow:
 
         # ---------- Center content containers ----------
         self.hero_panel = HeroPanel(self.center_frame, self)
-        self.hero_frame = self.hero_panel.frame        
+        self.hero_frame = self.hero_panel.frame
         self.page_container = tk.Frame(self.center_frame, bg=self.bg_center)
         self.special_frame = tk.Frame(self.center_frame, bg=self.bg_center)
 
@@ -70,7 +106,7 @@ class MainWindow:
         self.page_container.grid_columnconfigure(0, weight=1)
 
         self.confirmation_page = None
-        self.special_page = None        
+        self.special_page = None
 
         self.build_top()
         self.build_hero()
@@ -80,6 +116,23 @@ class MainWindow:
 
     # ====================== LANGUAGE SWITCH ======================
     def switch_language(self, lang):
+        """
+        Switch the interface language and rebuild relevant UI components.
+
+        Parameters:
+            lang: The target language code to activate for the current session.
+
+        Behavior:
+        - returns immediately if the requested language is already active,
+        - stores the new language selection,
+        - rebuilds the top panel, sidebar, hero area, order panel, and special page,
+        - refreshes the currently visible page if it supports language rebuilding,
+        - restores the correct page-specific content where necessary,
+        - refreshes the order panel through the controller.
+
+        This method supports the requirement that language changes should be dynamic
+        and remembered for the duration of the session.
+        """
         if lang == self.current_language:
             return
 
@@ -106,6 +159,12 @@ class MainWindow:
         self.controller.refresh_order_panel()
 
     def refresh_ui(self):
+        """
+        Rebuild the main reusable UI components.
+
+        This method is a general-purpose refresh helper used when the visible interface
+        needs to be rebuilt without changing the current application state explicitly.
+        """
         self.build_top()
         self.sidebar.build()
         self.build_hero()
@@ -116,20 +175,40 @@ class MainWindow:
     # Top Bar
     # =========================================================
     def build_top(self):
+        """
+        Build or rebuild the top navigation panel.
+
+        The actual widget creation is delegated to the TopPanel component.
+        """
         self.top_panel.build()
-
-
 
     # =========================================================
     # Home / Start Screen
     # =========================================================
     def build_hero(self):
+        """
+        Build or rebuild the hero panel shown on the home screen.
+
+        The actual widget creation is delegated to the HeroPanel component.
+        """
         self.hero_panel.build()
 
     # =========================================================
     # Dedicated Today's Special page
     # =========================================================
     def build_special_page(self):
+        """
+        Build the dedicated Today's Special page.
+
+        This method:
+        - clears any previous special-page content,
+        - retrieves language-specific text,
+        - creates the special offer card and its labels,
+        - adds descriptive tags,
+        - provides actions to add the special item to the order or return home.
+
+        The page is language-aware and reflects the currently active interface language.
+        """
         for widget in self.special_frame.winfo_children():
             widget.destroy()
 
@@ -250,34 +329,67 @@ class MainWindow:
     # Layout visibility helpers
     # =========================================================
     def show_sidebar(self):
+        """
+        Show the sidebar if it is currently hidden.
+
+        The sidebar contains the category menu and is primarily used when the user
+        navigates into the main menu pages.
+        """
         if not self.left_frame.winfo_manager():
             self.left_frame.pack(side="left", fill="y", before=self.center_frame)
 
     def hide_sidebar(self):
+        """
+        Hide the sidebar if it is currently visible.
+
+        This is typically used on screens such as the home page or confirmation page
+        where category navigation should not be shown.
+        """
         if self.left_frame.winfo_manager():
             self.left_frame.pack_forget()
 
     def show_page_container(self):
+        """
+        Show the page container used for standard menu pages.
+
+        The page container hosts the stacked category pages such as starters,
+        mains, desserts, or drinks.
+        """
         if not self.page_container.winfo_manager():
             self.page_container.pack(side="top", fill="both", expand=True, padx=18, pady=18)
 
     def hide_page_container(self):
+        """
+        Hide the page container if it is currently visible.
+        """
         if self.page_container.winfo_manager():
             self.page_container.pack_forget()
 
     def show_hero(self):
+        """
+        Show the hero panel used on the home screen.
+        """
         if not self.hero_frame.winfo_manager():
             self.hero_frame.pack(side="top", fill="both", expand=True)
 
     def hide_hero(self):
+        """
+        Hide the hero panel if it is currently visible.
+        """
         if self.hero_frame.winfo_manager():
             self.hero_frame.pack_forget()
 
     def show_special_container(self):
+        """
+        Show the container that displays the dedicated Today's Special page.
+        """
         if not self.special_frame.winfo_manager():
             self.special_frame.pack(side="top", fill="both", expand=True)
 
     def hide_special_container(self):
+        """
+        Hide the special-page container if it is currently visible.
+        """
         if self.special_frame.winfo_manager():
             self.special_frame.pack_forget()
 
@@ -285,6 +397,20 @@ class MainWindow:
     # Navigation helpers
     # =========================================================
     def navigate_to_page(self, page_name, sidebar_selection=None):
+        """
+        Navigate to one of the standard menu pages.
+
+        Parameters:
+            page_name: The internal page identifier to display.
+            sidebar_selection: The sidebar item that should be visually highlighted.
+
+        This method:
+        - updates page and sidebar state,
+        - hides non-relevant sections,
+        - shows the sidebar and page container,
+        - raises the target page,
+        - refreshes sidebar and top-navigation highlighting.
+        """
         self.current_page = page_name
         self.current_sidebar_selection = sidebar_selection
 
@@ -300,6 +426,16 @@ class MainWindow:
         self.update_top_nav_highlight("Menu")
 
     def show_home(self):
+        """
+        Display the home screen.
+
+        This method:
+        - sets the current page to home,
+        - clears the sidebar selection,
+        - hides menu-specific containers,
+        - rebuilds and shows the hero panel,
+        - updates visual highlighting in navigation components.
+        """
         self.current_page = "home"
         self.current_sidebar_selection = None
 
@@ -313,6 +449,16 @@ class MainWindow:
         self.update_top_nav_highlight("Home")
 
     def show_special_page(self):
+        """
+        Display the dedicated Today's Special page.
+
+        This method:
+        - sets the current page to the special page,
+        - clears the sidebar selection,
+        - hides unrelated containers,
+        - rebuilds and shows the special-page content,
+        - updates top and sidebar highlighting accordingly.
+        """
         self.current_page = "special"
         self.current_sidebar_selection = None
 
@@ -326,15 +472,35 @@ class MainWindow:
         self.update_top_nav_highlight("Today's Special")
 
     def show_page(self, page_frame):
+        """
+        Raise the given page frame to the front.
+
+        Parameters:
+            page_frame: The frame instance representing the page to display.
+        """
         page_frame.tkraise()
 
     def update_sidebar_highlight(self):
+        """
+        Update the sidebar so that the current category selection is visually highlighted.
+        """
         self.sidebar.update_highlight(self.current_sidebar_selection)
 
     def update_top_nav_highlight(self, active_name):
-        self.top_panel.update_highlight(active_name)    
+        """
+        Update the top navigation panel to highlight the active main navigation item.
+
+        Parameters:
+            active_name: The display name of the active top navigation item.
+        """
+        self.top_panel.update_highlight(active_name)
 
     def call_service(self):
+        """
+        Display a modal-style popup informing the user that staff has been called.
+
+        This provides feedback for the 'Call for service' action required by the project.
+        """
         popup = tk.Toplevel(self.root)
         popup.title("Call Service")
         popup.configure(bg=self.bg_center)
@@ -379,24 +545,69 @@ class MainWindow:
     # Order panel delegation
     # =========================================================
     def update_order_list(self, order_items, subtotal, total, tip_percentage):
+        """
+        Delegate order list rendering to the order panel component.
+
+        Parameters:
+            order_items: The current collection of ordered items.
+            subtotal: The subtotal before tip.
+            total: The final total including tip.
+            tip_percentage: The currently active tip value.
+        """
         self.order_panel.update_order_list(order_items, subtotal, total, tip_percentage)
 
     def update_place_order_button(self):
+        """
+        Delegate the place-order button update to the order panel.
+
+        This is typically used to enable or disable ordering actions based on current state.
+        """
         self.order_panel.update_place_order_button()
 
     def show_order_confirmation(self):
+        """
+        Delegate order confirmation behavior to the order panel component.
+        """
         self.order_panel.show_order_confirmation()
 
     def set_tip_mode(self, tip_percentage):
+        """
+        Delegate tip mode selection to the order panel component.
+
+        Parameters:
+            tip_percentage: The tip percentage to activate.
+        """
         self.order_panel.set_tip_mode(tip_percentage)
 
     def update_tip_buttons(self, active_tip_percentage):
+        """
+        Delegate visual tip-button highlighting to the order panel.
+
+        Parameters:
+            active_tip_percentage: The tip percentage currently selected.
+        """
         self.order_panel.update_tip_buttons(active_tip_percentage)
 
     # =========================================================
     # Confirmation page
     # =========================================================
     def show_confirmation_page(self, order_items, subtotal, total, tip_percentage):
+        """
+        Display the final confirmation page after an order has been placed.
+
+        Parameters:
+            order_items: The ordered items to summarize.
+            subtotal: The subtotal before tip.
+            total: The total including tip.
+            tip_percentage: The active tip percentage used in the order.
+
+        This method:
+        - lazily creates the confirmation page the first time it is needed,
+        - calculates the tip amount,
+        - generates an order summary,
+        - hides unrelated sections of the interface,
+        - shows the confirmation page to the user.
+        """
         if self.confirmation_page is None:
             self.confirmation_page = tk.Frame(self.page_container, bg=self.bg_center)
             self.confirmation_page.grid(row=0, column=0, sticky="nsew")
@@ -464,5 +675,11 @@ class MainWindow:
         self.confirmation_page.tkraise()
 
     def go_back_to_menu(self):
+        """
+        Return the user from the confirmation page to the default menu page.
+
+        The method currently navigates back to the starters page and restores the
+        corresponding sidebar selection in the active language.
+        """
         t = self.translations[self.current_language]
         self.navigate_to_page("starters", t["starters"])
