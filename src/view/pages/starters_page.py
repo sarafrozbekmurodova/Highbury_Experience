@@ -1,8 +1,24 @@
+"""
+Starters page implementation.
+
+Defines the starter menu items and delegates rendering to MenuCategoryPage.
+"""
+
 from view.pages.menu_category_page import MenuCategoryPage
 
 
 class StartersPage(MenuCategoryPage):
+    """
+    Page representing the starters category.
+
+    This class provides starter item data and relies on MenuCategoryPage
+    for rendering and interaction logic.
+    """
+
     def __init__(self, parent, controller):
+        """
+        Initialize the starters page with predefined items.
+        """
         items = [
             {
                 "item_id": "starter_bruschetta",
