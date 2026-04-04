@@ -1,5 +1,6 @@
 import tkinter as tk
 from PIL import Image, ImageTk
+from components.draggable import Draggable
 
 
 class MenuCategoryPage(tk.Frame):
@@ -73,8 +74,6 @@ class MenuCategoryPage(tk.Frame):
             name = self.t(name_key) if name_key else self._get_item_value(item, "name", "Unnamed item")
             desc = self.t(desc_key) if desc_key else self._get_item_value(item, "description", "")
 
-            order_item_data = self._build_order_item_data(item, name, price)
-
             item_frame = tk.Frame(
                 self,
                 bg="#33261f",
@@ -82,7 +81,13 @@ class MenuCategoryPage(tk.Frame):
                 highlightthickness=1
             )
             item_frame.pack(fill="x", padx=20, pady=10)
-
+            order_item_data = self._build_order_item_data(item, name, price)
+            Draggable(
+                widget=item_frame,
+                item_data=order_item_data,
+                drop_target=self.main_window.right_frame,
+                on_drop=self._on_item_dropped
+            )
             def on_card_enter(e, frame=item_frame):
                 frame.config(
                     bg="#3b2d25",
@@ -200,3 +205,8 @@ class MenuCategoryPage(tk.Frame):
 
     def refresh_language(self, lang=None):
         self.build_page()
+        
+    def _on_item_dropped(self, item_data):
+            """Handle drag & drop to order summary"""
+            if self.controller:
+                self.controller.add_to_order(item_data)
