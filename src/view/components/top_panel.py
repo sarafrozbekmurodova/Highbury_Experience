@@ -2,7 +2,30 @@ import tkinter as tk
 
 
 class TopPanel:
+    """
+    Top navigation panel component.
+
+    The name "TopPanel" reflects its role as the horizontal bar at the top
+    of the application, commonly used for branding, global navigation,
+    and high-level actions.
+
+    Responsibilities:
+    - display the restaurant brand/title,
+    - provide main navigation (Home, Menu, Special, Order),
+    - provide access to the "Call Service" action,
+    - allow switching between interface languages,
+    - visually highlight the active navigation item.
+
+    This component is part of the View layer and delegates actions to MainWindow.
+    """
+
     def __init__(self, parent, main_window):
+        """
+        Initialize the top panel.
+
+        :param parent: Parent Tk container
+        :param main_window: Reference to MainWindow for state, styling, and actions
+        """
         self.parent = parent
         self.main_window = main_window
         self.top_nav_buttons = {}
@@ -12,6 +35,17 @@ class TopPanel:
         self.frame.pack_propagate(False)
 
     def build(self):
+        """
+        Build or rebuild the top panel UI.
+
+        This method:
+        - clears existing widgets,
+        - renders brand/title,
+        - creates navigation buttons,
+        - creates call-service button,
+        - creates language switch buttons,
+        - stores navigation buttons for highlight updates.
+        """
         for widget in self.frame.winfo_children():
             widget.destroy()
 
@@ -33,7 +67,7 @@ class TopPanel:
         nav_frame.pack(side="left", padx=40)
 
         nav_items = [
-            ("Home", t["home"], self.main_window.show_home),            
+            ("Home", t["home"], self.main_window.show_home),
             ("Menu", t["menu"], lambda: self.main_window.navigate_to_page("starters", "starters")),
             ("Today's Special", t["todays_special"], self.main_window.show_special_page),
             ("My Order", t["my_order"], None),
@@ -114,6 +148,11 @@ class TopPanel:
             btn.pack(side="left", padx=3)
 
     def update_highlight(self, active_name):
+        """
+        Update the visual highlight of the top navigation buttons.
+
+        :param active_name: Internal name of the active navigation item
+        """
         for label, btn in self.top_nav_buttons.items():
             if str(btn.cget("state")) == "disabled":
                 continue
