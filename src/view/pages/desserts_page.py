@@ -1,8 +1,24 @@
+"""
+Desserts page implementation.
+
+Defines the dessert menu items and delegates rendering to MenuCategoryPage.
+"""
+
 from view.pages.menu_category_page import MenuCategoryPage
 
 
 class DessertsPage(MenuCategoryPage):
+    """
+    Page representing the desserts category.
+
+    This class provides dessert item data and relies on MenuCategoryPage
+    for rendering and interaction logic.
+    """
+
     def __init__(self, parent, controller):
+        """
+        Initialize the desserts page with predefined dessert items.
+        """
         dessert_items = [
             {
                 "item_id": "dessert_chocolate_lava_cake",
