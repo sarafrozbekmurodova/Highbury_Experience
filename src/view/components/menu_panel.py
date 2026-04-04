@@ -3,9 +3,12 @@ import tkinter as tk
 
 class Sidebar:
     """
-    Sidebar represents the left-hand menu navigation panel in the main window.
+    Sidebar component.
 
-    This component is responsible for:
+    The name "Sidebar" reflects its role as the left-hand vertical navigation
+    panel, commonly used in UI design to provide access to main categories.
+
+    Responsibilities:
     - rendering the menu category buttons,
     - rebuilding its content when the language changes,
     - notifying the main window when the user navigates to a category page,
