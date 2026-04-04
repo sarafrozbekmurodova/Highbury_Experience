@@ -1,10 +1,37 @@
+"""
+Reusable menu category page.
+
+This page renders a list of menu items for a specific category, such as
+starters, desserts, drinks, or light courses. It supports translated text,
+image display, add-to-order actions, and drag-and-drop interaction.
+"""
+
 import tkinter as tk
 from PIL import Image, ImageTk
 from components.draggable import Draggable
 
 
 class MenuCategoryPage(tk.Frame):
+    """
+    Generic page used to display menu items for a single category.
+
+    Responsibilities:
+    - Render category title and optional subtitle
+    - Display menu item cards with image, description, and price
+    - Support add-to-order actions
+    - Support drag-and-drop ordering
+    - Rebuild itself when the language changes
+    """
+
     def __init__(self, parent, controller, items, category_key):
+        """
+        Initialize the category page.
+
+        :param parent: Parent Tkinter container
+        :param controller: Main application controller
+        :param items: Collection of menu items to display
+        :param category_key: Translation key for the category title
+        """
         super().__init__(parent, bg="#221a16")
         self.controller = controller
         self.main_window = getattr(controller, "main_window", None)
@@ -22,11 +49,27 @@ class MenuCategoryPage(tk.Frame):
         self.build_page()
 
     def _get_item_value(self, item, key, default=None):
+        """
+        Return a value from either a dictionary-based or object-based menu item.
+
+        :param item: Menu item as dict or object
+        :param key: Field name to retrieve
+        :param default: Default value if missing
+        :return: Retrieved value or default
+        """
         if isinstance(item, dict):
             return item.get(key, default)
         return getattr(item, key, default)
 
     def _build_order_item_data(self, item, translated_name, price):
+        """
+        Build normalized order-item data for the order system.
+
+        :param item: Original menu item
+        :param translated_name: Display name in the active language
+        :param price: Item price
+        :return: Dictionary representing the order item
+        """
         item_id = (
             self._get_item_value(item, "item_id")
             or self._get_item_value(item, "name_key")
@@ -43,6 +86,9 @@ class MenuCategoryPage(tk.Frame):
         }
 
     def build_page(self):
+        """
+        Build or rebuild the full category page UI.
+        """
         for widget in self.winfo_children():
             widget.destroy()
 
@@ -81,13 +127,16 @@ class MenuCategoryPage(tk.Frame):
                 highlightthickness=1
             )
             item_frame.pack(fill="x", padx=20, pady=10)
+
             order_item_data = self._build_order_item_data(item, name, price)
+
             Draggable(
                 widget=item_frame,
                 item_data=order_item_data,
                 drop_target=self.main_window.right_frame,
                 on_drop=self._on_item_dropped
             )
+
             def on_card_enter(e, frame=item_frame):
                 frame.config(
                     bg="#3b2d25",
@@ -108,7 +157,6 @@ class MenuCategoryPage(tk.Frame):
 
             try:
                 img_path = f"data/images/{img_filename}"
-
                 base_img = Image.open(img_path)
 
                 small = ImageTk.PhotoImage(base_img.resize((120, 90), Image.LANCZOS))
@@ -129,6 +177,7 @@ class MenuCategoryPage(tk.Frame):
 
                 img_label.bind("<Enter>", img_enter)
                 img_label.bind("<Leave>", img_leave)
+
             except Exception:
                 tk.Label(
                     image_wrapper,
@@ -204,9 +253,18 @@ class MenuCategoryPage(tk.Frame):
                 child.bind("<Leave>", on_card_leave, add="+")
 
     def refresh_language(self, lang=None):
+        """
+        Rebuild the page when the active language changes.
+
+        :param lang: Optional language code, currently unused
+        """
         self.build_page()
-        
+
     def _on_item_dropped(self, item_data):
-            """Handle drag & drop to order summary"""
-            if self.controller:
-                self.controller.add_to_order(item_data)
+        """
+        Handle an item being dropped onto the order area.
+
+        :param item_data: Normalized order item data
+        """
+        if self.controller:
+            self.controller.add_to_order(item_data)
