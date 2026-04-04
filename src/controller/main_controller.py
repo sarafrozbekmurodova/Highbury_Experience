@@ -1,6 +1,6 @@
 # src/controller/main_controller.py
 
-from view.translations.translations import translations
+from i18n.translations import translations
 from service.order_service import OrderService
 
 
