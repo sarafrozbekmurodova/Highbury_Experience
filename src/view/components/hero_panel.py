@@ -1,13 +1,47 @@
+"""
+Hero panel component.
+
+The name "HeroPanel" comes from UI/UX terminology, where a "hero section"
+refers to the prominent introductory area on a screen, typically used to
+welcome users and highlight primary actions.
+
+Responsibilities:
+- Display the home screen introduction
+- Show welcome text and tagline
+- Provide primary navigation actions (start order, today's special)
+"""
+
 import tkinter as tk
 
 
 class HeroPanel:
+    """
+    Component representing the home screen's main content area.
+
+    This panel is shown when the user is on the home page and acts as the
+    primary entry point into the ordering flow.
+    """
+
     def __init__(self, parent, main_window):
+        """
+        Initialize the hero panel.
+
+        :param parent: Parent container
+        :param main_window: Reference to the main window for styling and navigation
+        """
         self.parent = parent
         self.main_window = main_window
         self.frame = tk.Frame(self.parent, bg=self.main_window.bg_center)
 
     def build(self):
+        """
+        Build or rebuild the hero panel UI.
+
+        This method:
+        - clears existing content
+        - renders welcome text and branding
+        - creates action buttons for navigation
+        """
         for widget in self.frame.winfo_children():
             widget.destroy()
 
@@ -63,7 +97,7 @@ class HeroPanel:
             padx=36,
             pady=14,
             font=("Arial", 12, "bold"),
-            cursor="hand2",            
+            cursor="hand2",
             command=lambda: self.main_window.navigate_to_page("starters", "starters"),
             width=18
         ).pack(pady=(0, 14))
