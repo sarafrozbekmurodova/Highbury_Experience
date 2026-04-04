@@ -2,7 +2,31 @@ import tkinter as tk
 
 
 class Sidebar:
+    """
+    Sidebar represents the left-hand menu navigation panel in the main window.
+
+    This component is responsible for:
+    - rendering the menu category buttons,
+    - rebuilding its content when the language changes,
+    - notifying the main window when the user navigates to a category page,
+    - visually highlighting the currently selected category.
+
+    The Sidebar does not own the navigation state itself. Instead, it reflects
+    the current state stored in MainWindow.
+    """
+
     def __init__(self, parent, main_window, controller):
+        """
+        Initialize the sidebar component.
+
+        Parameters:
+            parent: The parent Tk container in which the sidebar is placed.
+            main_window: Reference to the MainWindow instance that owns the UI state.
+            controller: Reference to the main controller of the application.
+
+        This constructor creates the sidebar frame, initializes the internal
+        button registry, and builds the initial sidebar content.
+        """
         self.parent = parent
         self.main_window = main_window
         self.controller = controller
@@ -20,6 +44,19 @@ class Sidebar:
         self.build()
 
     def build(self):
+        """
+        Build or rebuild the sidebar content.
+
+        This method:
+        - clears the existing sidebar widgets,
+        - retrieves translated labels for the active language,
+        - creates one button per menu category,
+        - stores buttons by stable internal category key,
+        - reapplies the current highlight after rebuilding.
+
+        Using stable internal keys instead of translated labels ensures that
+        the highlight state survives language switching correctly.
+        """
         for widget in self.frame.winfo_children():
             widget.destroy()
 
@@ -58,12 +95,24 @@ class Sidebar:
                 pady=12,
                 font=("Arial", 11),
                 cursor="hand2",
-                command=lambda p=key, s=label: self.main_window.navigate_to_page(p, s)
+                command=lambda p=key, s=key: self.main_window.navigate_to_page(p, s)
             )
             btn.pack(fill="x", padx=14, pady=4)
-            self.buttons[label] = btn
+            self.buttons[key] = btn
+
+        self.update_highlight(self.main_window.current_sidebar_selection)
 
     def update_highlight(self, selected_label):
+        """
+        Update the visual highlight of the sidebar buttons.
+
+        Parameters:
+            selected_label: The stable internal key of the currently selected
+                            sidebar category.
+
+        The selected button is rendered using the active highlight style, while
+        all other buttons are reset to the default sidebar style.
+        """
         for label, btn in self.buttons.items():
             if label == selected_label:
                 btn.config(
