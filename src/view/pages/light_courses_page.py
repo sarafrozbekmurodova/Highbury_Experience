@@ -1,8 +1,24 @@
+"""
+Light courses page implementation.
+
+Defines the light course menu items and delegates rendering to MenuCategoryPage.
+"""
+
 from view.pages.menu_category_page import MenuCategoryPage
 
 
 class LightCoursesPage(MenuCategoryPage):
+    """
+    Page representing the light courses category.
+
+    This class provides light course item data and relies on MenuCategoryPage
+    for rendering and interaction logic.
+    """
+
     def __init__(self, parent, controller):
+        """
+        Initialize the light courses page with predefined items.
+        """
         light_items = [
             {
                 "item_id": "light_caesar_salad",
