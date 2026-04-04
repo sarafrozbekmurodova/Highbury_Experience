@@ -116,7 +116,7 @@ class OrderPanel:
 
         no_tip_btn = tk.Button(
             tip_frame,
-            text="No Tip",
+            text=t["no_tip"],
             bg=self.main_window.green,
             fg="white",
             activebackground=self.main_window.green_hover,
@@ -133,7 +133,7 @@ class OrderPanel:
 
         ten_tip_btn = tk.Button(
             tip_frame,
-            text="10% Tip",
+            text=t["ten_percent_tip"],
             bg=self.main_window.bg_right,
             fg=self.main_window.text_soft,
             activebackground=self.main_window.green,
@@ -286,8 +286,10 @@ class OrderPanel:
         if len(order_items) == 0:
             return
 
+        t = self.main_window.translations[self.main_window.current_language]
+
         popup = tk.Toplevel(self.main_window.root)
-        popup.title("Confirm Order")
+        popup.title(t["confirm_order_title"])
         popup.configure(bg=self.main_window.bg_center)
         popup.geometry("420x240")
         popup.resizable(False, False)
@@ -296,7 +298,7 @@ class OrderPanel:
 
         tk.Label(
             popup,
-            text="Confirm your order",
+            text=t["confirm_order_heading"],
             bg=self.main_window.bg_center,
             fg=self.main_window.text_main,
             font=("Georgia", 18, "bold")
@@ -304,7 +306,7 @@ class OrderPanel:
 
         tk.Label(
             popup,
-            text="Are you sure you want to place this order?",
+            text=t["confirm_order_message"],
             bg=self.main_window.bg_center,
             fg=self.main_window.text_soft,
             font=("Arial", 11)
@@ -315,7 +317,7 @@ class OrderPanel:
 
         tk.Button(
             button_row,
-            text="Cancel",
+            text=t["cancel"],
             command=popup.destroy,
             bg=self.main_window.red,
             fg="white",
@@ -335,7 +337,7 @@ class OrderPanel:
 
         tk.Button(
             button_row,
-            text="Confirm",
+            text=t["confirm"],
             command=confirm_and_place,
             bg=self.main_window.green,
             fg="white",

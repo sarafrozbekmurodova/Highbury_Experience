@@ -3,7 +3,7 @@ translations = {
     "EN": {
         "brand": "♛ The Crown & Barrel",
         "menu": "Menu",
-        "light_courses": "Light Courses",        
+        "light_courses": "Light Courses",
         "main_courses": "Main Courses",
         "set_meals": "Set Meals",
         "desserts": "Desserts",
@@ -29,6 +29,14 @@ translations = {
         "start_order": "Start Order",
         "menu_subtitle": "Choose from our selection and add items to your order.",
         "add": "Add",
+
+        "no_tip": "No Tip",
+        "ten_percent_tip": "10% Tip",
+        "confirm_order_title": "Confirm Order",
+        "confirm_order_heading": "Confirm your order",
+        "confirm_order_message": "Are you sure you want to place this order?",
+        "cancel": "Cancel",
+        "confirm": "Confirm",
 
         # Page titles
         "starters": "Starters",
@@ -100,7 +108,6 @@ translations = {
         "house_white_wine_desc": "Glass of Chardonnay",
         "craft_beer": "Craft Beer",
         "craft_beer_desc": "Local IPA"
-
     },
 
     "SV": {
@@ -120,7 +127,7 @@ translations = {
         "group_order": "Gruppbeställning",
         "total": "Totalt",
         "sub_total": "Delsumma",
-        "tip": "Tip",
+        "tip": "Dricks",
         "place_order": "Lägg Beställning",
         "empty_order": "Din beställning är tom.\nBläddra i menyn och lägg till varor.",
         "welcome": "Välkommen till Krona & Tunnan",
@@ -130,9 +137,16 @@ translations = {
         "add_to_order": "+ Lägg till i beställning",
         "back_to_home": "Tillbaka till Hem",
         "start_order": "Starta beställning",
-
         "menu_subtitle": "Välj från vårt utbud och lägg till i din beställning.",
         "add": "Lägg till",
+
+        "no_tip": "Ingen dricks",
+        "ten_percent_tip": "10% dricks",
+        "confirm_order_title": "Bekräfta beställning",
+        "confirm_order_heading": "Bekräfta din beställning",
+        "confirm_order_message": "Är du säker på att du vill lägga beställningen?",
+        "cancel": "Avbryt",
+        "confirm": "Bekräfta",
 
         # Page titles
         "starters": "Förrätter",
@@ -206,63 +220,71 @@ translations = {
         "craft_beer_desc": "Lokal IPA"
     },
 
-"DE": {
-    "brand": "♛ Krone & Fass",
-    "menu": "Menü",
-    "light_courses": "Leichte Gerichte",
-    "main_courses": "Hauptgerichte",
-    "set_meals": "Menüs",
-    "desserts": "Desserts",
-    "beverages": "Getränke",
-    "home": "Start",
-    "todays_special": "Heutiges Special",
-    "my_order": "Meine Bestellung",
-    "call_service": "Service rufen",
-    "order_summary": "Bestellübersicht",
-    "single_order": "Einzelbestellung",
-    "group_order": "Gruppenbestellung",
-    "total": "Gesamt",
-    "sub_total": "Zwischensumme",
-    "tip": "Trinkgeld",
-    "place_order": "Bestellen",
-    "empty_order": "Ihre Bestellung ist leer.\nBitte wählen Sie etwas aus dem Menü.",
-    "welcome": "Willkommen bei Krone & Fass",
-    "tagline": "Traditionelle britische Pubküche · Seit 1887",
-    "sunday_roast": "Sonntagsbraten ✩",
-    "sunday_roast_desc": "Langsam gebratenes Rindfleisch mit Yorkshire-Pudding, Kartoffeln, Gemüse und Bratensauce",
-    "add_to_order": "+ Zur Bestellung hinzufügen",
-    "back_to_home": "Zurück zum Start",
-    "start_order": "Bestellung starten",
-    "menu_subtitle": "Wählen Sie aus unserem Angebot und fügen Sie Gerichte hinzu.",
-    "add": "Hinzufügen",
+    "DE": {
+        "brand": "♛ Krone & Fass",
+        "menu": "Menü",
+        "light_courses": "Leichte Gerichte",
+        "main_courses": "Hauptgerichte",
+        "set_meals": "Menüs",
+        "desserts": "Desserts",
+        "beverages": "Getränke",
+        "home": "Start",
+        "todays_special": "Heutiges Special",
+        "my_order": "Meine Bestellung",
+        "call_service": "Service rufen",
+        "order_summary": "Bestellübersicht",
+        "single_order": "Einzelbestellung",
+        "group_order": "Gruppenbestellung",
+        "total": "Gesamt",
+        "sub_total": "Zwischensumme",
+        "tip": "Trinkgeld",
+        "place_order": "Bestellen",
+        "empty_order": "Ihre Bestellung ist leer.\nBitte wählen Sie etwas aus dem Menü.",
+        "welcome": "Willkommen bei Krone & Fass",
+        "tagline": "Traditionelle britische Pubküche · Seit 1887",
+        "sunday_roast": "Sonntagsbraten ✩",
+        "sunday_roast_desc": "Langsam gebratenes Rindfleisch mit Yorkshire-Pudding, Kartoffeln, Gemüse und Bratensauce",
+        "add_to_order": "+ Zur Bestellung hinzufügen",
+        "back_to_home": "Zurück zum Start",
+        "start_order": "Bestellung starten",
+        "menu_subtitle": "Wählen Sie aus unserem Angebot und fügen Sie Gerichte hinzu.",
+        "add": "Hinzufügen",
 
-    # Page titles
-    "starters": "Vorspeisen",    
-    "drinks": "Getränke",
+        "no_tip": "Kein Trinkgeld",
+        "ten_percent_tip": "10% Trinkgeld",
+        "confirm_order_title": "Bestellung bestätigen",
+        "confirm_order_heading": "Bestätigen Sie Ihre Bestellung",
+        "confirm_order_message": "Möchten Sie diese Bestellung wirklich aufgeben?",
+        "cancel": "Abbrechen",
+        "confirm": "Bestätigen",
 
-    # Page subtitles
-    "starters_subtitle": "Beginnen Sie mit unseren Vorspeisen",
-    "light_courses_subtitle": "Leichte Optionen für jeden Geschmack",
-    "set_meals_subtitle": "Kombinationsmenüs für alle",
-    "desserts_subtitle": "Süße Leckereien zum Abschluss",
-    "drinks_subtitle": "Getränke zu Ihren Speisen",
+        # Page titles
+        "starters": "Vorspeisen",
+        "drinks": "Getränke",
 
-    # Starters items
-    "starter_bruschetta": "Bruschetta",
-    "starter_bruschetta_desc": "Geröstetes Brot mit Tomaten, Knoblauch & Basilikum",
-    "starter_caesar": "Caesar Salat",
-    "starter_caesar_desc": "Römersalat, Parmesan, Croutons & Dressing",
-    "starter_garlic": "Knoblauchbrot",
-    "starter_garlic_desc": "Geröstetes Brot mit Knoblauchbutter",
-    "starter_soup": "Tagessuppe",
-    "starter_soup_desc": "Täglich frisch vom Chef",
-    "starter_calamari": "Calamari",
-    "starter_calamari_desc": "Frittierte Tintenfischringe mit Dip",
+        # Page subtitles
+        "starters_subtitle": "Beginnen Sie mit unseren Vorspeisen",
+        "light_courses_subtitle": "Leichte Optionen für jeden Geschmack",
+        "set_meals_subtitle": "Kombinationsmenüs für alle",
+        "desserts_subtitle": "Süße Leckereien zum Abschluss",
+        "drinks_subtitle": "Getränke zu Ihren Speisen",
 
-    # Drinks example
-    "espresso": "Espresso",
-    "espresso_desc": "Frisch gebrühter Espresso",
-    "cappuccino": "Cappuccino",
-    "cappuccino_desc": "Mit Milchschaum",
-}    
+        # Starters items
+        "starter_bruschetta": "Bruschetta",
+        "starter_bruschetta_desc": "Geröstetes Brot mit Tomaten, Knoblauch & Basilikum",
+        "starter_caesar": "Caesar Salat",
+        "starter_caesar_desc": "Römersalat, Parmesan, Croutons & Dressing",
+        "starter_garlic": "Knoblauchbrot",
+        "starter_garlic_desc": "Geröstetes Brot mit Knoblauchbutter",
+        "starter_soup": "Tagessuppe",
+        "starter_soup_desc": "Täglich frisch vom Chef",
+        "starter_calamari": "Calamari",
+        "starter_calamari_desc": "Frittierte Tintenfischringe mit Dip",
+
+        # Drinks example
+        "espresso": "Espresso",
+        "espresso_desc": "Frisch gebrühter Espresso",
+        "cappuccino": "Cappuccino",
+        "cappuccino_desc": "Mit Milchschaum"
+    }
 }
