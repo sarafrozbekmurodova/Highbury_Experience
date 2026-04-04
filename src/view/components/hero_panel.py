@@ -63,8 +63,8 @@ class HeroPanel:
             padx=36,
             pady=14,
             font=("Arial", 12, "bold"),
-            cursor="hand2",
-            command=lambda: self.main_window.navigate_to_page("starters", t["starters"]),
+            cursor="hand2",            
+            command=lambda: self.main_window.navigate_to_page("starters", "starters"),
             width=18
         ).pack(pady=(0, 14))
 

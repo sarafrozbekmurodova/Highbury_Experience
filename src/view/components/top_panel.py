@@ -33,8 +33,8 @@ class TopPanel:
         nav_frame.pack(side="left", padx=40)
 
         nav_items = [
-            ("Home", t["home"], self.main_window.show_home),
-            ("Menu", t["menu"], lambda: self.main_window.navigate_to_page("starters", t["starters"])),
+            ("Home", t["home"], self.main_window.show_home),            
+            ("Menu", t["menu"], lambda: self.main_window.navigate_to_page("starters", "starters")),
             ("Today's Special", t["todays_special"], self.main_window.show_special_page),
             ("My Order", t["my_order"], None),
         ]
