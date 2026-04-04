@@ -1,8 +1,24 @@
+"""
+Set meals page implementation.
+
+Defines the set meal menu items and delegates rendering to MenuCategoryPage.
+"""
+
 from view.pages.menu_category_page import MenuCategoryPage
 
 
 class SetMealsPage(MenuCategoryPage):
+    """
+    Page representing the set meals category.
+
+    This class provides set meal item data and relies on MenuCategoryPage
+    for rendering and interaction logic.
+    """
+
     def __init__(self, parent, controller):
+        """
+        Initialize the set meals page with predefined items.
+        """
         set_meals_items = [
             {
                 "item_id": "set_2_course_meal",
