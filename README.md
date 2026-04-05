@@ -1,219 +1,83 @@
-# The Highbury Experience 🔴⚪
-
-**Project 1 – User Interfaces: Programming and Evaluation (HCI)**
-A premium restaurant menu and ordering system inspired by Arsenal Football Club.
-
----
+## The Highbury Experience
+- Course: User Interfaces: Programming and Evaluation  
+- Project 1: A restaurant menu and ordering system inspired by Arsenal Football Club.
+- Group 7
+    - Sarafroz Bekmurodova  
+    - Cardo Khaledi  
+    - William Lagerqvist
 
 ## Overview
-
-The Highbury Experience is a **desktop UI application** built with Python and Tkinter.
-It simulates a restaurant menu and ordering system designed for both tablet and mobile interfaces.
-
-The focus of this project is:
-
-- User Interface design
-- Interaction design
-- MVC architecture
-- Usability (HCI principles)
-
----
+- The Highbury Experience is a desktop user interface application built with Python and Tkinter.
+- The system simulates a restaurant menu and ordering experience, designed to work across tablet and mobile form factors, 
+  with a strong focus on usability and interaction design.
 
 ## Features (MVP)
+- Browse menu categories (Starters, Mains, Desserts, Beverages)  
+- View item details (description, allergens, dietary information)  
+- Add and remove items from an order  
+- Modify item quantities  
+- View current order summary  
+- Display total price (with optional tipping)  
 
-- Browse menu categories (starters, mains, desserts, beverages)
-- View item details (description, allergens, dietary info)
-- Add items to order
-- View and update current order
-- Display total price (with optional tipping)
+### Key Focus Areas
+- User Interface (UI) design  
+- Interaction design  
+- MVC-based architecture  
+- Usability and HCI principles
 
----
+## Notes
+- No real backend is implemented, as per course requirements.
+- The system simulates state using in-memory structures.
+- Focus is on interaction, usability, and structure, not production deployment  
+- This project is not about building a full production system, it is about designing 
+  and implementing a well-structured, user-centered interface.
+
+## Status
+- Core UI implemented  
+- MVC structure established  
+- Key features functional  
+- Ready for demonstration  
 
 ## Design Approach
+The system is designed using an HCI-driven process:
+- Personas and Scenarios to define user needs 
+- Requirement specification based on user context  
+- Low-fidelity prototyping (Sprint 0)  
+- Iterative refinement of UI and interaction flow  
 
-This project is based on:
+The design emphasizes:
+- Simplicity and clarity of navigation  
+- Low cognitive load  
+- Visibility of system state (order overview)  
+- Consistency across different screen sizes  
 
-- Personas and Scenarios (HCI-driven design)
-- Sprint 0 prototyping (low-fidelity UI design)
-- MVC (Model-View-Controller) architecture
+## Architecture
+The system follows a layered MVC-inspired architecture:
+- Model: Domain data and state (menu, order) 
+- View: Tkinter UI components (rendering only)  
+- Controller: Handles user interaction and flow  
+- Service: Business logic (order handling, calculations)  
+- Repository: Data abstraction
 
-Documentation can be found in:
-
-```
-docs/
-```
-
----
-
-## 🏗 Project Structure
-
-```
-Highbury_Experience/
-│
-├── README.md
-│
-├── docs/
-│   ├── 01_Personas_and_Scenarios.md
-│   ├── 02_Sprint0_MVP_Screens.md
-│   └── 03_Project_Summary_and_Next_Steps.md
-│
-├── src/
-│   ├── main.py
-│   ├── app.py
-│   │
-│   ├── model/
-│   ├── view/
-│   ├── controller/
-│   └── data/
-│
-├── tests/
-└── assets/
-```
-
----
+## Architectural Goals
+- Clear separation of concerns  
+- Maintainability and extensibility  
+- Decoupling UI from business logic and data  
+- This structure allows future changes (e.g., new UI or data source) without major refactoring.
 
 ## Requirements
-
-- Python **3.10+** (recommended)
-- Tkinter (included with standard Python installation)
-
-To verify Tkinter:
-
-```bash
-python -m tkinter
-```
-
----
-
-## How to Run the Application
-
-1. Navigate to the `src` folder:
-
-2. Run the application:
-
-```bash
-python main.py
-```
-
----
+- Python 3.10+
+- Tkinter (included in standard Python distribution)  
+- To verify Tkinter: python -m tkinter
 
 ## Development Setup
+- Install Python
+- (Optional) Virtual Environment, python -m venv venv
+- Activate:
+    - Windows: venv\Scripts\activate
+    - Mac/Linux: source venv/bin/activate
+- Dependencies: pip install -r requirements.txt.
 
-1. Install Python
-
-Download from:
-https://www.python.org/downloads/
-
-Verify installation:
-
-```bash
-python --version
-```
-
----
-
-### 2. (Optional but Recommended) Create Virtual Environment
-
-```bash
-python -m venv venv
-```
-
-Activate:
-
-**Windows**
-
-```bash
-venv\Scripts\activate
-```
-
-**Mac/Linux**
-
-```bash
-source venv/bin/activate
-```
-
----
-
-### 3. Install Dependencies
-
-Currently, no external dependencies are required.
-(Tkinter is included with Python)
-
----
-
-### 4. Open in VS Code
-
-* Open folder: `HighburyExperience`
-* Select Python interpreter (venv if used)
-
----
-
-## 🧩 Architecture
-
-The system follows a simplified MVC pattern:
-
-* **Model** → Data and business logic (menu, order)
-* **View** → Tkinter UI components
-* **Controller** → Interaction logic
-
----
-
-## 👥 Collaboration
-
-This project is designed for group collaboration.
-
-Guidelines:
-
-* Keep structure clean (respect MVC separation)
-* Document major changes
-* Ensure all members understand the code
-* Use Git for version control
-
----
-
-## 🧪 Testing
-
-Basic tests can be added in:
-
-```
-tests/
-```
-
-(Currently minimal – to be extended)
-
----
-
-## 📅 Status
-
-* Project structure created
-* Sprint 0 (Personas, Scenarios, UI design) in progress
-* Sprint 1 (UI implementation) in progress
-
----
-
-## ⚠️ Notes
-
-* No real backend is implemented (as per course requirements)
-* Focus is on UI behavior and interaction
-
----
-
-## 💬 Authors
-
-
-Course: User Interfaces: Programming and Evaluation
-Group 7
-
-- Sarafroz Bekmurodova
-- Cardo Khaledi
-- William Lagerqvist
-
-
----
-
-## 🏆 Final Note
-
-This project is not about building a full system —
-it is about building a **well-designed interface**.
-
----
+## How to Run the Application
+1. Navigate to the `src` directory  
+2. Run the application: python main.py
