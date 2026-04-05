@@ -35,7 +35,7 @@ class App:
         Initialize application components and wire dependencies.
         """
         self.root = tk.Tk()
-        self.root.title("The Crown & Barrel")
+        self.root.title("The Highbury Experience - Arsenal Football Club")
 
         self.root.geometry("1400x850")
         self.root.minsize(1200, 700)

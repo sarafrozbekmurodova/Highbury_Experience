@@ -1,7 +1,7 @@
 translations = {
 
     "EN": {
-        "brand": "♛ The Crown & Barrel",
+        "brand": "The Highbury Experience",
         "menu": "Menu",
         "light_courses": "Light Courses",
         "main_courses": "Main Courses",
@@ -20,7 +20,7 @@ translations = {
         "tip": "Tip",
         "place_order": "Place Order",
         "empty_order": "Your order is empty.\nBrowse our menu and add items.",
-        "welcome": "Welcome to The Crown & Barrel",
+        "welcome": "Welcome to The Highbury Experience",
         "tagline": "Traditional British Pub Fare · Est. 1887",
         "sunday_roast": "Sunday Roast Beef ✩",
         "sunday_roast_desc": "Slow-roasted sirloin with Yorkshire pudding, roast potatoes, seasonal vegetables and rich gravy",
@@ -110,8 +110,8 @@ translations = {
         "craft_beer_desc": "Local IPA"
     },
 
-    "SV": {
-        "brand": "♛ Krona & Tunnan",
+    "SV": {        
+        "brand": "The Highbury Experience",
         "menu": "Meny",
         "light_courses": "Lätta Rätter",
         "main_courses": "Huvudrätter",
@@ -220,8 +220,8 @@ translations = {
         "craft_beer_desc": "Lokal IPA"
     },
 
-    "DE": {
-        "brand": "♛ Krone & Fass",
+    "DE": {        
+        "brand": "The Highbury Experience",
         "menu": "Menü",
         "light_courses": "Leichte Gerichte",
         "main_courses": "Hauptgerichte",
