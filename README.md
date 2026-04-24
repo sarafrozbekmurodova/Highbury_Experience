@@ -79,5 +79,6 @@ The system follows a layered MVC-inspired architecture:
 - Dependencies: pip install -r requirements.txt.
 
 ## How to Run the Application
-1. Navigate to the `src` directory  
-2. Run the application: python main.py
+1. Open a terminal in the project root folder (the folder that contains `src`).
+2. Install dependencies: pip install -r requirements.txt
+3. Run the application: python src/main.py
